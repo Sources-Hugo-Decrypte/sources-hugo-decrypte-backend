@@ -53,8 +53,9 @@ def keepUrlOnlyArray(array):
         array.remove(element)
     return array
 
-def getAllUrlsFromDescrption(text, removeDuplicates=True):
-    splitedText = splitPositions(text, findAllOccurrences(text, ['http', 'https']))
+def getAllUrlsFromDescrption(textDesc, removeDuplicates=True):
+    assert isinstance(textDesc, str), f"Given desc should be a string. Given : {textDesc}"
+    splitedText = splitPositions(textDesc, findAllOccurrences(textDesc, ['http', 'https']))
     onlyWithUrl = keepUrlOnlyArray(splitedText)
     for i in range(len(onlyWithUrl)):
         onlyWithUrl[i] = keepUrlOnlyLine(onlyWithUrl[i])
