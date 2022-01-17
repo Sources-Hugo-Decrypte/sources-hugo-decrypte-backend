@@ -52,15 +52,3 @@ def send_mail(send_from, send_to, subject, message, files=None,
     smtp.login(username, password)
     smtp.sendmail(send_from, send_to, msg.as_string())
     smtp.quit()
-
-
-if __name__=='__main__':
-    file1 = r"D:\Youen\Documents\Programmes\Programmes python\HugoDecrypteSources\log\20211229_145549.log"
-    send_mail(send_from="git.youn@gmail.com",
-              send_to=["git.youn@gmail.com"],
-              subject="HDS log",
-              message="Here's your log",
-              files=[file1],
-              server="smtp.gmail.com",
-              username="git.youn@gmail.com",
-              password=os.environ['GOOGLE_GIT_ACCOUNT_PASSWORD'])
