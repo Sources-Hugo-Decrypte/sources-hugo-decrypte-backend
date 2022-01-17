@@ -8,7 +8,7 @@ def youtubeGetUrlFromVideoId(videoId):
     return "https://www.youtube.com/watch?v=%s" % videoId
 
 def youtubeExtractDetails(url):
-    video = pafy.new(url, private_api_key=YTB_API_KEY)
+    video = pafy.new(url)
     return {VIDEO_TABLE.COL_DATE: video.published.replace('Z',''),
             VIDEO_TABLE.COL_NAME: video.title,
             VIDEO_TABLE.COL_IMG : video.bigthumb,
