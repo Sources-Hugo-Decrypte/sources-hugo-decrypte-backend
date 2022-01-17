@@ -1,8 +1,21 @@
-
+import atexit
 from time import time
 from datetime import datetime, timedelta
 from dbUpdater import *
+from emailFunctions import *
 
+def emailProcedure():
+    emailSubject = "HDS daily update"
+    emailMessage = f"Program done. Find log in the attachment."
+    emailFiles = [fileLog, fileLogError]
+    send_mail(send_from="GitHub",
+              send_to=[os.environ["HDS_GMAIL_ADDRESS"]],
+              subject=emailSubject,
+              message=emailMessage,
+              files=emailFiles,
+              server="smtp.gmail.com",
+              username=os.environ["HDS_GMAIL_ADDRESS"],
+              password=os.environ["HDS_GMAIL_APP_PASSWORD"])
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
@@ -30,11 +43,13 @@ if __name__ == '__main__':
         myLogger.addHandler(fe_handler)
 
     updater = DatabaseUpdater(logger=myLogger, database=DB_NAME, user=DB_USER, password=DB_PWD, host=DB_HOST)
+    print(updater.db.getTablesNames())
     if 0:
         updater.db.clearDb()
         updater.createTablesIntoDb()
     if 1:
         try:
+            atexit.register(emailProcedure) # Schedule sending email at end of execution
             timeStart = time()
             ### put below this line the tasks to execute ###
             updater.dailyUpdate()
