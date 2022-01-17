@@ -88,7 +88,7 @@ class DatabaseUpdater(object):
         for videoId in listVideoId:
             try:
                 dicVideoDetails = self.db.getRow(tableName=VIDEO_TABLE.NAME, dicKeysValues={VIDEO_TABLE.COL_ID: videoId})
-                assert dicVideoDetails[VIDEO_TABLE.COL_DESC]!=DB_DEFAULT_VALUE, f"No description for video id '{videoId}'"
+                assert dicVideoDetails[VIDEO_TABLE.COL_DESC] not in [DB_DEFAULT_VALUE, ''], f"No description for video id '{videoId}'"
                 listUrl = getAllUrlsFromDescrption(dicVideoDetails[VIDEO_TABLE.COL_DESC])
                 for url in listUrl:
                     try:
