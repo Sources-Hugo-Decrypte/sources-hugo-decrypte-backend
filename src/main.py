@@ -22,8 +22,8 @@ if __name__ == '__main__':
     if 1:
         if not os.path.exists(LOG_PATH): os.mkdir(LOG_PATH)
         creationDate = datetime.now()
-        fileLog = LOG_PATH + os.sep + creationDate.strftime("%Y%m%d_%H%M%S") + '.log'
-        fileLogError = LOG_PATH + os.sep + creationDate.strftime("%Y%m%d_%H%M%S") + '_error.log'
+        fileLog = LOG_PATH + os.sep + creationDate.strftime("%Y%m%d_%H%M%S") + '_log.txt'
+        fileLogError = LOG_PATH + os.sep + creationDate.strftime("%Y%m%d_%H%M%S") + '_error_log.txt'
         myLogger = logging.getLogger(__name__)
         for file in [fileLog, fileLogError]:
             with open(file, 'w') as f:
