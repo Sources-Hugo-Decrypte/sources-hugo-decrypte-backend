@@ -34,7 +34,7 @@ jobs:
             HDS_DBSERVER_CONN_STRING: ${{ secrets.HDS_DBSERVER_CONN_STRING }}
             HDS_GMAIL_ADDRESS: ${{ secrets.HDS_GMAIL_ADDRESS }}
             HDS_GMAIL_APP_PASSWORD: ${{ secrets.HDS_GMAIL_APP_PASSWORD }}
-        run: python main.py
+        run: python src/main.py
 
       - name : Send email if workflow failed
         if: ${{ failure() }}
@@ -47,7 +47,7 @@ jobs:
           username: ${{ secrets.HDS_GMAIL_ADDRESS }}
           password: ${{ secrets.HDS_GMAIL_APP_PASSWORD }}
           # email subject
-          subject: ${{ github.workflow }} | vb${{ job.status }}
+          subject: ${{ github.workflow }} | ${{ job.status }}
           # email body as text
           body: Find worflow log at ${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}
           # comma-separated string, send email to
