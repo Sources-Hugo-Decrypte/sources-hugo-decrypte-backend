@@ -24,7 +24,7 @@ jobs:
           python -m pip install --upgrade pip requests
           python -m pip install psycopg2
           python -m pip install youtube_dl
-          python -m pip install -e git+https://github.com/mohamed-challal/pafy.git@develop#egg=pafy
+          python -m pip install -e https://github.com/Sources-Hugo-Decrypte/pafy.git@develop#egg=pafy
           python -m pip install scrapetube
           python -m pip install urllib3
 
@@ -35,7 +35,7 @@ jobs:
 
       - name: Daily routine
         env :
-            #HDS_YOUTUBE_API_KEY: ${{ secrets.HDS_YOUTUBE_API_KEY }}
+            HDS_YOUTUBE_API_KEY: ${{ secrets.HDS_YOUTUBE_API_KEY }}
             HDS_DBSERVER_CONN_STRING: ${{ secrets.HDS_DBSERVER_CONN_STRING }}
             HDS_GMAIL_ADDRESS: ${{ secrets.HDS_GMAIL_ADDRESS }}
             HDS_GMAIL_APP_PASSWORD: ${{ secrets.HDS_GMAIL_APP_PASSWORD }}
