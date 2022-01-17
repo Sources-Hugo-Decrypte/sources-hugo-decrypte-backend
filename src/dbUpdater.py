@@ -32,10 +32,10 @@ class DatabaseUpdater(object):
 
     ########## DB update procedure methods ##########
 
-    def step01_generic_checkNewVideos(self, limit=1, logEn=True):
+    def step01_generic_checkNewVideos(self, limit, logEn=True):
         ##### Add line to try internet connection #####
+        assert isinstance(limit, int) or limit is None, f"'limit' should be either 'None' or an int. Given : {limit}"
         listVideoId = youtubeGetAllVideosFromUserChannel(YTB_HUGO_CHANNEL_URL, limit=limit)
-        # listVideoId = ["SM0mDqUWIzA", "6xbQt0a80m4", "MUEHWbgFgAk", "fgSFieDFDiq"]
         # Ensure that there are no duplicates in the returned video Ids :
         assert len(listVideoId) == len(set(listVideoId)), "Duplicates ids found"
         listKnownVideoId = self.getListKnownVideoId()
@@ -86,61 +86,66 @@ class DatabaseUpdater(object):
         if not doAll: assert isinstance(listVideoId, list), f"'listVideoId should be a list. Given {listVideoId}"
         else: listVideoId = self.getListKnownVideoId()
         for videoId in listVideoId:
-            dicVideoDetails = self.db.getRow(tableName=VIDEO_TABLE.NAME, dicKeysValues={VIDEO_TABLE.COL_ID: videoId})
-            listUrl = getAllUrlsFromDescrption(dicVideoDetails[VIDEO_TABLE.COL_DESC])
-            # listKnownUrl = self.db.doQuery(f"SELECT {URL_TABLE.COL_URL_FULL} FROM {URL_TABLE.NAME} "
-            #                                f"WHERE {URL_TABLE.COL_VIDEO_ID}='{videoId}'")
-            for url in listUrl:
-                try:
-                    shortUrl = getShortUrl(url)
-                    self.db.insertInto(tableName=URL_TABLE.NAME, dicData={URL_TABLE.COL_VIDEO_ID: videoId,
-                                                                          URL_TABLE.COL_URL_FULL: url,
-                                                                          URL_TABLE.COL_URL_SHORT: shortUrl})
-                    if logEn: self.logger.info(f"New url added. Video id '{videoId}'. Url '{url}'")
-                except Exception as e:
-                    # if logEn: self.logger.exception(f"Error occurred with video id '{videoId}'")
-                    self.logger.error(f"Error occurred with video id '{videoId}'\n{e}")
+            try:
+                dicVideoDetails = self.db.getRow(tableName=VIDEO_TABLE.NAME, dicKeysValues={VIDEO_TABLE.COL_ID: videoId})
+                assert dicVideoDetails[VIDEO_TABLE.COL_DESC]!=DB_DEFAULT_VALUE, f"No description for video id '{videoId}'"
+                listUrl = getAllUrlsFromDescrption(dicVideoDetails[VIDEO_TABLE.COL_DESC])
+                for url in listUrl:
+                    try:
+                        shortUrl = getShortUrl(url)
+                        self.db.insertInto(tableName=URL_TABLE.NAME, dicData={URL_TABLE.COL_VIDEO_ID: videoId,
+                                                                              URL_TABLE.COL_URL_FULL: url,
+                                                                              URL_TABLE.COL_URL_SHORT: shortUrl})
+                        if logEn: self.logger.info(f"New url added. Video id '{videoId}'. Url '{url}'")
+                    except Exception as e:
+                        # if logEn: self.logger.exception(f"Error occurred with video id '{videoId}'")
+                        self.logger.error(f"Error occurred with video id '{videoId}' and url '{url}'\n{e}")
+            except Exception as e:
+                self.logger.error(f"Error occurred with video id '{videoId}'\n{e}")
 
     def step22_urlTable_addCheck(self, listVideoId, overwrite=False, doAll=False, logEn=True):
         if not doAll: assert isinstance(listVideoId, list), f"'listVideoId should be a list. Given {listVideoId}"
         else: listVideoId = self.getListKnownVideoId()
         for videoId in listVideoId:
-            listUrl = self.db.doQuery(f"SELECT {URL_TABLE.COL_URL_FULL} FROM {URL_TABLE.NAME} "
-                                      f"WHERE {URL_TABLE.COL_VIDEO_ID}='{videoId}'")
-            listUrl = [listUrl[i][0] for i in range(len(listUrl))]
-            for url in listUrl:
-                try:
-                    if overwrite or self.db.isDataMissing(tableName=URL_TABLE.NAME,
-                                                          dicKeysValues={URL_TABLE.COL_VIDEO_ID: videoId,
-                                                                         URL_TABLE.COL_URL_FULL: url},
-                                                          listColumnsToCheck=[URL_TABLE.COL_CHECK_STATUS,
-                                                                              URL_TABLE.COL_CHECK_MSG]):
-                        checkStatus, checkMsg = checkUrl(url)
-                        self.db.updateData(tableName=URL_TABLE.NAME,
-                                           dicKeysValues={URL_TABLE.COL_VIDEO_ID: videoId,
-                                                          URL_TABLE.COL_URL_FULL: url},
-                                           dicData={URL_TABLE.COL_CHECK_STATUS: checkStatus,
-                                                    URL_TABLE.COL_CHECK_MSG: checkMsg})
-                        if logEn:
-                            self.logger.info(f"Url checked. Video id '{videoId}'. Url : '{url}'")
-                            if checkStatus.upper()!="OK":
-                                self.logger.warning(f"Check status not OK. Check message : {checkMsg}. Video id '{videoId}'. Url : '{url}'")
-
-                except Exception as e:
-                    self.logger.error(f"Error occurred with video id '{videoId}' and url '{url}'\n{e}")
+            try:
+                listUrl = self.db.doQuery(f"SELECT {URL_TABLE.COL_URL_FULL} FROM {URL_TABLE.NAME} "
+                                          f"WHERE {URL_TABLE.COL_VIDEO_ID}='{videoId}'")
+                assert len(listUrl)!=0, f"No url known for video id '{videoId}'"
+                listUrl = [listUrl[i][0] for i in range(len(listUrl))]
+                for url in listUrl:
+                    try:
+                        if overwrite or self.db.isDataMissing(tableName=URL_TABLE.NAME,
+                                                              dicKeysValues={URL_TABLE.COL_VIDEO_ID: videoId,
+                                                                             URL_TABLE.COL_URL_FULL: url},
+                                                              listColumnsToCheck=[URL_TABLE.COL_CHECK_STATUS,
+                                                                                  URL_TABLE.COL_CHECK_MSG]):
+                            checkStatus, checkMsg = checkUrl(url)
+                            self.db.updateData(tableName=URL_TABLE.NAME,
+                                               dicKeysValues={URL_TABLE.COL_VIDEO_ID: videoId,
+                                                              URL_TABLE.COL_URL_FULL: url},
+                                               dicData={URL_TABLE.COL_CHECK_STATUS: checkStatus,
+                                                        URL_TABLE.COL_CHECK_MSG: checkMsg})
+                            if logEn:
+                                self.logger.info(f"Url checked. Video id '{videoId}'. Url : '{url}'")
+                                if checkStatus.upper()!="OK":
+                                    self.logger.warning(f"Check status not OK. Check message : {checkMsg}. Video id '{videoId}'. Url : '{url}'")
+                    except Exception as e:
+                        self.logger.error(f"Error occurred with video id '{videoId}' and url '{url}'\n{e}")
+            except Exception as e:
+                self.logger.error(f"Error occurred with video id '{videoId}'\n{e}")
 
     def step31_registerTable_updateTable(self, logEn=True):
         listShortUrl = self.db.doQuery(f"SELECT DISTINCT {URL_TABLE.COL_URL_SHORT} FROM {URL_TABLE.NAME}")
-        listShortUrl = [listShortUrl[i][0] for i in range(len(listShortUrl))]
+        if len(listShortUrl)>0: listShortUrl = [listShortUrl[i][0] for i in range(len(listShortUrl))]
         listShortUrlKnown = self.db.getKeyValues(tableName=REGISTER_TABLE.NAME)
-        listShortUrlKnown = [listShortUrlKnown[i][0] for i in range(len(listShortUrlKnown))]
+        if len(listShortUrlKnown)>0: listShortUrlKnown = [listShortUrlKnown[i][0] for i in range(len(listShortUrlKnown))]
         for shortUrl in listShortUrl:
-            if shortUrl not in listShortUrlKnown:
-                try:
+            try:
+                if shortUrl not in listShortUrlKnown:
                     self.db.insertInto(tableName=REGISTER_TABLE.NAME, dicData={REGISTER_TABLE.COL_URL_SHORT: shortUrl})
                     if logEn: self.logger.info(f"New short url '{shortUrl}'")
-                except Exception:
-                    self.logger.exception(f"Error occurred with short url '{shortUrl}'")
+            except Exception:
+                self.logger.exception(f"Error occurred with short url '{shortUrl}'")
 
 
 
@@ -148,12 +153,12 @@ class DatabaseUpdater(object):
 
     def dailyUpdate(self):
         self.logger.info("Start daily update procedure")
-        listVideoId = self.step01_generic_checkNewVideos(limit=2)
+        listVideoId = self.step01_generic_checkNewVideos(limit=3)
         if len(listVideoId)!=0:
             self.step11_videoTable_createRowsFromListVideoId(listVideoId=listVideoId)
             self.step12_videoTable_addVideoDetails(listVideoId=listVideoId)
             self.step21_urlTable_createRowsFromListVideoId(listVideoId=listVideoId)
-            self.step22_urlTable_addCheck(listVideoId=listVideoId)
+            # self.step22_urlTable_addCheck(listVideoId=listVideoId)
             self.step31_registerTable_updateTable()
         self.logger.info("End of daily update procedure")
 
