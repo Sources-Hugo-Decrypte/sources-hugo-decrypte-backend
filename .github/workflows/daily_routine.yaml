@@ -28,9 +28,14 @@ jobs:
           python -m pip install scrapetube
           python -m pip install urllib3
 
+      - name: Set private ytb api key
+        run: |
+          rm ~/.config/mps-youtube/cache_py*
+          mpsyt set api_key ${{ secrets.HDS_YOUTUBE_API_KEY }}
+
       - name: Daily routine
         env :
-            HDS_YOUTUBE_API_KEY: ${{ secrets.HDS_YOUTUBE_API_KEY }}
+            #HDS_YOUTUBE_API_KEY: ${{ secrets.HDS_YOUTUBE_API_KEY }}
             HDS_DBSERVER_CONN_STRING: ${{ secrets.HDS_DBSERVER_CONN_STRING }}
             HDS_GMAIL_ADDRESS: ${{ secrets.HDS_GMAIL_ADDRESS }}
             HDS_GMAIL_APP_PASSWORD: ${{ secrets.HDS_GMAIL_APP_PASSWORD }}
