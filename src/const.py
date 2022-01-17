@@ -1,6 +1,7 @@
 
 import os
 from pathlib import Path
+import urllib.parse as up
 
 # Const variables
 
@@ -8,7 +9,6 @@ from pathlib import Path
 ##                                           COMMON                                            #
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-# ROOT_PATH = os.path.dirname(os.path.abspath(__file__)).parent.absolute()
 ROOT_PATH = Path(os.path.abspath(__file__)).parent.parent.absolute()
 LOG_PATH = str(ROOT_PATH) + os.sep + "log"
 LOG_HEADER = "="*50+"\n\tExecution Log File\n\tCreation Date : %s\n"+"="*50+"\n\n"
@@ -27,10 +27,18 @@ YTB_HUGO_CHANNEL_URL = "https://www.youtube.com/c/HugoD%C3%A9crypte"
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # Data base file :
-DB_NAME = "HDSDB"
-DB_USER = "postgres"
-DB_PWD  = os.environ["PGSQL_LOCAL_PWD"]
-DB_HOST = "localhost"
+# --- used for local DB : -----
+# DB_NAME = "HDSDB"
+# DB_USER = "postgres"
+# DB_PWD  = os.environ["PGSQL_LOCAL_PWD"]
+# DB_HOST = "localhost"
+# ----- for server DB : -----
+DB_CONN_STRING = os.environ["HDS_DBSERVER_CONN_STRING"]
+DB_NAME = up.urlparse(DB_CONN_STRING).path[1:]
+DB_USER = up.urlparse(DB_CONN_STRING).username
+DB_PWD  = up.urlparse(DB_CONN_STRING).password
+DB_HOST = up.urlparse(DB_CONN_STRING).hostname
+
 
 # Default element stored into DB when no value :
 DB_DEFAULT_VALUE = None
