@@ -43,7 +43,6 @@ if __name__ == '__main__':
         myLogger.addHandler(fe_handler)
 
     updater = DatabaseUpdater(logger=myLogger, database=DB_NAME, user=DB_USER, password=DB_PWD, host=DB_HOST)
-    print(updater.db.getTablesNames())
     if 0:
         updater.db.clearDb()
         updater.createTablesIntoDb()
