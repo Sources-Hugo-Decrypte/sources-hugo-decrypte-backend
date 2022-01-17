@@ -1,10 +1,7 @@
 
-# main functions to execute requests on internet
+# functions to tests urls
 
-# from bs4 import BeautifulSoup
-import requests, logging, json
 import urllib.request, urllib.error
-import http.client
 
 httpStatus = {  # details on : https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
   "1": "Informational",
@@ -55,98 +52,9 @@ httpStatus = {  # details on : https://www.w3.org/Protocols/rfc2616/rfc2616-sec1
   "505": "HTTP Version Not Supported"
 }
 
-def webScrappingAllHTML(url, parsing='html.parser'):
-    """
-    Do a research on internet and return full html code of the page founded
-    :param url: string of the url
-    :return: all html code of the founded page (BeautifulSoup object)
-    """
-    # Header to fake a browser in the request. This is to force request for websites which are blocking the python agent for http requests :
-    header = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-
-    # You must initialize logging, otherwise you'll not see debug output.
-    logging.basicConfig()
-    logging.getLogger().setLevel(logging.DEBUG)
-    requests_log = logging.getLogger("requests.packages.urllib3")
-    requests_log.setLevel(logging.DEBUG)
-    requests_log.propagate = True
-
-    response = requests.get(url, headers=header, verify=False, stream=True)
-    httpStatusValue = str(response).split('[')[1].replace(']>','')
-    if httpStatusValue[0] in httpStatus.keys() and httpStatusValue in httpStatus.keys():
-        print("HTTP request status : " + httpStatus[httpStatusValue[0]] + " (" + httpStatus[httpStatusValue] + ")")
-    return BeautifulSoup(response.content, parsing)
-
-
-def webDownloadPicture(url, filePath):
-    """
-    Download a picture from url
-    :param url: url of the picture
-    :param filePath: path and file name where to save the picture
-    :return: 0 if no error
-    """
-    # Header to fake a browser in the request. This is to force request for websites which are blocking the python agent for http requests :
-    #header = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-    header = {'User-Agent': 'Chrome/39.0.2171.95'}
-    # You must initialize logging, otherwise you'll not see debug output.
-    logging.basicConfig()
-    logging.getLogger().setLevel(logging.DEBUG)
-    requests_log = logging.getLogger("requests.packages.urllib3")
-    requests_log.setLevel(logging.DEBUG)
-    requests_log.propagate = True
-
-    response = requests.get(url, headers=header, verify=False, stream=True)
-    httpStatusValue = str(response).split('[')[1].replace(']>', '')
-    if httpStatusValue[0] in httpStatus.keys() and httpStatusValue in httpStatus.keys():
-        print("HTTP request status : " + httpStatus[httpStatusValue[0]] + " (" + httpStatus[httpStatusValue] + ")")
-    file = open(filePath, 'wb')
-    file.write(response.content)
-    file.close()
-    return 0
-
-def OLD_checkUrls(urlList, returnErrors=True):
-    """
-    If errors detected returns {"HTTPError": [{"url"     : url,
-                                              "Exception": e},
-                                              {"url"     : url,
-                                              "Exception": e},
-                                              ...],
-                                "URLError" : [{"url"     : url,
-                                              "Exception": e},
-                                              {"url"     : url,
-                                              "Exception": e},
-                                              ...],
-                                "Others"   : [{"url"     : url,
-                                              "Exception": e},
-                                              {"url"     : url,
-                                              "Exception": e},
-                                              ...]
-                                }
-    """
-    HTTPError = []
-    URLError = []
-    OtherError = []
-    for url in urlList:
-        try:
-            assert urllib.request.urlopen(url).getcode() == 200, "Website unreachable | url : %s" % url
-        except urllib.error.HTTPError as e:
-            HTTPError.append({"url": url, "Exception": str(e)})
-        except urllib.error.URLError as e:
-            URLError.append({"url": url, "Exception": str(e)})
-        except Exception as e:
-            OtherError.append({"url": url, "Exception": str(e)})
-            # raise Exception(str(e) + "\nurl : %s" % url)
-    finalDic = {"HTTPError": HTTPError,
-                "URLError" : URLError,
-                "OtherError": OtherError}
-    if returnErrors: return finalDic
-    else:
-        if len(HTTPError)!=0 or len(URLError)!=0 or len(OtherError)!=0:
-            raise Exception(str(finalDic))
-
 def checkUrl(url):
     """
-    If errors detected returns "TYPE : <ExceptionType> | "+str(e)
+    If errors detected returns (<ExceptionType>, <error>)
     Else return "OK"
     """
     try:
