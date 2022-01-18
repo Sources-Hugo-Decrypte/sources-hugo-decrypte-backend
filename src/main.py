@@ -78,7 +78,6 @@ if __name__ == '__main__':
             timeStart = time()
             ### put below this line the tasks to execute ###
             updater.dailyUpdate()
-            myLogger.info("Test error message")
             ### end of tasks to execute ###
             timeEnd = time()
             timeElapsed = timedelta(seconds=timeEnd-timeStart)
