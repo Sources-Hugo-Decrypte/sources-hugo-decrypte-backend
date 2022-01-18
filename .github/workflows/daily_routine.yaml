@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  dbupdate:
     runs-on: ubuntu-latest
 
     steps:
