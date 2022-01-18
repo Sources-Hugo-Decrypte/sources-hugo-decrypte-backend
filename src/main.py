@@ -5,19 +5,19 @@ from datetime import datetime, timedelta
 from dbUpdater import *
 from emailFunctions import *
 
-def isLogFileFilled(logFile):
+def logDataWithoutHeader(logFile):
     """
-    Check if a log file not only contains the header but also additional data
+    Get data of log file without header
     """
     with open(logFile, 'r') as f:
-        lines = f.readlines()
+        text = f.readlines()
         f.close()
-    lines = ''.join(lines).replace(LOG_HEADER % creationDate.strftime(LOG_HEADER_DATE_FORMAT), '')
-    return None if len(lines)==0 else lines
+    text = ''.join(text).replace(LOG_HEADER % creationDate.strftime(LOG_HEADER_DATE_FORMAT), '')
+    return None if len(text)==0 else text
 
 
 def emailProcedure():
-    dataErrorLog = isLogFileFilled(fileLogError)
+    dataErrorLog = logDataWithoutHeader(fileLogError)
     if dataErrorLog is None:
         emailSubject = "Daily Routine | OK"
         emailMessage = f"Program done. Find log in the attachment."
