@@ -1,8 +1,8 @@
-name: Daily Routine Workflow
+name: Daily Routine
 
 on:
   schedule:
-    - cron: "0 20 * * *" # Runs at 20:00 UTC (Paris is UTC+2)
+    - cron: "0 20 * * *" # Runs at 20:00 UTC (Paris is UTC+1 or UTC+2 in summer)
   workflow_dispatch:
 
 jobs:
@@ -47,7 +47,7 @@ jobs:
           username: ${{ secrets.HDS_GMAIL_ADDRESS }}
           password: ${{ secrets.HDS_GMAIL_APP_PASSWORD }}
           # email subject
-          subject: ${{ github.workflow }} | ${{ job.status }}
+          subject: ${{ github.workflow }} | workflow ${{ job.status }}
           # email body as text
           body: Find worflow log at ${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}
           # comma-separated string, send email to
