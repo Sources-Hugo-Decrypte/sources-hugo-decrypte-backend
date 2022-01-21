@@ -95,7 +95,6 @@ class URL_TABLE:
     listKeys = [COL_VIDEO_ID, COL_URL_FULL]
     listColumns = list(dicStructure.keys())
 
-
 ## # # # #     Register table     # # # # #
 ##
 ## Structure :
@@ -120,7 +119,6 @@ class REGISTER_TABLE:
 ##  - LINKS_YOUTUBE_CHANNEL     : [String] if it is a video link, name of the author channel
 ##  - LINKS_YOUTUBE_MSG         : [String] message of the link analysis
 ##
-NOT_FOUND = "NOT_FOUND"
 class LINKS_YTB_TABLE:
     NAME = "links_ytb_table"
     # Columns :
@@ -132,6 +130,23 @@ class LINKS_YTB_TABLE:
                     COL_CHANNEL: "text",
                     COL_MSG: "text"}
     listKeys = [COL_URL]
+    listColumns = list(dicStructure.keys())
+
+## # # # #     Blacklist youtube channels table     # # # # #
+##
+## Structure :
+##  - BLACKLIST_YTB_CHANNEL_NAME        : [String] name of the channel blacklisted
+##  - BLACKLIST_YTB_CHANNEL_REASON      : [String] reason why it is blacklisted (mandatory)
+##
+class BLACKLIST_YTB_CHANNEL_TABLE:
+    NAME = "blacklist_ytb_channel_table"
+    # Columns :
+    COL_NAME = "blacklist_ytb_channel_name"
+    COL_REASON = "blacklist_ytb_channel_reason"
+    # Variables :
+    dicStructure = {COL_NAME: "text",
+                    COL_REASON: "text"}
+    listKeys = [COL_NAME]
     listColumns = list(dicStructure.keys())
 
 ## # # # #     Blacklist table     # # # # #
@@ -153,5 +168,25 @@ class BLACKLIST_TABLE:
 
 
 # List of all XXX_TABLE objects :
-DB_LIST_TABLES_OBJ = [VIDEO_TABLE, URL_TABLE, REGISTER_TABLE, BLACKLIST_TABLE]
+DB_LIST_TABLES_OBJ = [VIDEO_TABLE,
+                      URL_TABLE,
+                      REGISTER_TABLE,
+                      LINKS_YTB_TABLE,
+                      BLACKLIST_YTB_CHANNEL_TABLE,
+                      BLACKLIST_TABLE]
 
+
+
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+##                            HARD ENCODED BLACKLISTED ELEMENTS                                #
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+# Structure is as follows : ((url, reason_of_blacklisting), (url, reason_of_blacklisting), ...)
+LIST_BLACKLISTED_URL = (("radio-londres.fr", "This is and old domain name, owned by Hugo Travers, for one of the projects he made. It now redirects to his youtube home page account"),
+                        ("https://open.spotify.com/show/6y1PloEyNsCNJH9vHias4T?si=pz8U9CGkTCO_IGSEnMVxVw", "Hugo Decrypte's podcasts home page"))
+
+# Structure is as follows : ((channel_name, reason_of_blacklisting), (channel_name, reason_of_blacklisting), ...)
+LIST_BLACKLISTED_YTB_CHANNEL = (("HugoDécrypte - Actus du jour", "Hugo Decrypte channel"),
+                                ("HugoDécrypte", "Hugo Decrypte channel"),
+                                ("Hugo Travers", "Channel owned by Hugo Travers"),
+                                ("Craft", "Channel owned bu Hugo Travers and Cyrus North"))
