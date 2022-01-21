@@ -30,6 +30,18 @@ class DatabaseUpdater(object):
         listKnownVideoId = [listKnownVideoId[i][0] for i in range(len(listKnownVideoId))]  # transform result into list
         return listKnownVideoId
 
+    def addUrlToBlacklist(self, url, reason):
+        assert isinstance(url, str), f"'url' should be a string. Given : {type(url)}"
+        assert isinstance(reason, str), f"'reason' should be a string. Given : {type(reason)}"
+        assert len(reason)!=0, "'reason' should not be empty"
+        # Ensure that this url exists (to only save meaningful urls):
+        queryResult = self.db.doQuery(f"SELECT {URL_TABLE.COL_URL_FULL} FROM {URL_TABLE.NAME} "
+                                      f"WHERE {URL_TABLE.COL_URL_FULL}='{url}' "
+                                      f"OR {URL_TABLE.COL_URL_SHORT}='{url}'")
+        assert len(queryResult)!=0, f"The given url doesn't exist in '{URL_TABLE.NAME}'. Given : '{url}'"
+        self.db.insertInto(tableName=BLACKLIST_TABLE.NAME, dicData={BLACKLIST_TABLE.COL_URL: url,
+                                                                    BLACKLIST_TABLE.COL_REASON: reason})
+
     ########## DB update procedure methods ##########
 
     def step01_generic_checkNewVideos(self, limit, logEn=True):
