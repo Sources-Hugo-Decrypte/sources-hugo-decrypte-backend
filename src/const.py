@@ -112,7 +112,23 @@ class REGISTER_TABLE:
     dicStructure = {COL_URL_SHORT: "text",
                     COL_COMMON_NAME: "text"}
 
+## # # # #     Register table     # # # # #
+##
+## Structure :
+##  - REGISTER_SHORT_URL    : [String] short url of the page (ex : 'www.ouest-france.fr' or 'actu.fr')
+##  - REGISTER_NAME         : [String] common name of the media (ex : 'Ouest-France' or 'Actu')
+class BLACKLIST_TABLE:
+    NAME = "blacklist_table"
+    # Columns :
+    COL_URL = "blacklist_url"
+    COL_REASON = "blacklist_reason"
+    # Variables :
+    listColumns = [COL_URL, COL_REASON]
+    listKeys = [COL_URL]
+    dicStructure = {COL_URL: "text",
+                    COL_REASON: "text"}
+
 
 # List of all XXX_TABLE objects :
-DB_LIST_TABLES_OBJ = [VIDEO_TABLE, URL_TABLE, REGISTER_TABLE]
+DB_LIST_TABLES_OBJ = [VIDEO_TABLE, URL_TABLE, REGISTER_TABLE, BLACKLIST_TABLE]
 
