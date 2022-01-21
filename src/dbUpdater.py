@@ -159,6 +159,34 @@ class DatabaseUpdater(object):
             except Exception:
                 self.logger.exception(f"Error occurred with short url '{shortUrl}'")
 
+    def step41_linksYtbTable_updateTable(self, logEn=True):
+        listYoutubeSpecificShortUrl = ('youtube.com', 'www.youtube.com', 'm.youtube.com', 'gaming.youtube.com', 'youtu.be', 'www.youtu.be')
+        whereRequest = f"{URL_TABLE.COL_URL_SHORT}='{listYoutubeSpecificShortUrl[0]}'"
+        for i in range(1, len(listYoutubeSpecificShortUrl)):
+            whereRequest += f"OR {URL_TABLE.COL_URL_SHORT}='{listYoutubeSpecificShortUrl[i]}'"
+        # Extract links from DB :
+        queryResult = self.db.doQuery(f"SELECT DISTINCT {URL_TABLE.COL_URL_FULL} FROM {URL_TABLE.NAME} "
+                                      f"WHERE {whereRequest}")
+        listLinks = [queryResult[i][0] for i in range(len(queryResult))]
+        listLinksKnown = self.db.getKeyValues(tableName=LINKS_YTB_TABLE.NAME)
+        # Analyse links :
+        for link in listLinks:
+            if link not in listLinksKnown:
+                try:
+                    channelName = pafy.new(link, private_api_key=YTB_API_KEY).author
+                    self.db.insertInto(tableName=LINKS_YTB_TABLE.NAME, dicData={LINKS_YTB_TABLE.COL_URL: link,
+                                                                                LINKS_YTB_TABLE.COL_CHANNEL: channelName,
+                                                                                LINKS_YTB_TABLE.COL_MSG: "OK"})
+                    if logEn: self.logger.info(f"Analysis OK. New source : '{link}'")
+                except Exception as e:
+                    try:
+                        self.db.insertInto(tableName=LINKS_YTB_TABLE.NAME, dicData={LINKS_YTB_TABLE.COL_URL: link,
+                                                                                    LINKS_YTB_TABLE.COL_CHANNEL: NOT_FOUND,
+                                                                                    LINKS_YTB_TABLE.COL_MSG: str(e)})
+                        if logEn: self.logger.info(f"Analysis OK. Not a source : '{link}'")
+                    except Exception:
+                        self.logger.exception(f"Error with link '{link}'")
+
 
 
     ##### global procedures #####

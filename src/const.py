@@ -50,7 +50,7 @@ DB_DEFAULT_VALUE = None
 ## Structure :
 ##  - VIDEO_ID      : [String] unique video ID given by youtube
 ##  - VIDEO_NAME    : [String] name of the youtube video (video title)
-##  - VIDEO_DATE    : [String] release date of the video
+##  - VIDEO_DATE    : [Timestamp] release date of the video
 ##  - VIDEO_DESC    : [String] description associated to the video
 ##
 class VIDEO_TABLE:
@@ -62,13 +62,13 @@ class VIDEO_TABLE:
     COL_DESC = "video_desc"
     COL_IMG  = "video_img"
     # variables :
-    listColumns = [COL_ID, COL_NAME, COL_DATE, COL_IMG, COL_DESC]    # columns in order
-    listKeys = [COL_ID]   # keys in order
     dicStructure = {COL_ID: "text",
                     COL_NAME: "text",
                     COL_DATE: "timestamp",
                     COL_IMG : "text",
                     COL_DESC: "text"}
+    listKeys = [COL_ID]   # keys in order
+    listColumns = list(dicStructure.keys())
 
 ## # # # #     Urls table     # # # # #
 ##
@@ -87,13 +87,13 @@ class URL_TABLE:
     COL_CHECK_STATUS = "url_check_status"
     COL_CHECK_MSG = "url_check_msg"
     # Variables :
-    listColumns = [COL_VIDEO_ID, COL_URL_FULL, COL_URL_SHORT, COL_CHECK_STATUS, COL_CHECK_MSG]
-    listKeys = [COL_VIDEO_ID, COL_URL_FULL]
     dicStructure = {COL_VIDEO_ID: "text",
                     COL_URL_FULL : "text",
                     COL_URL_SHORT: "text",
                     COL_CHECK_STATUS: "text",
                     COL_CHECK_MSG: "text"}
+    listKeys = [COL_VIDEO_ID, COL_URL_FULL]
+    listColumns = list(dicStructure.keys())
 
 
 ## # # # #     Register table     # # # # #
@@ -101,32 +101,55 @@ class URL_TABLE:
 ## Structure :
 ##  - REGISTER_SHORT_URL    : [String] short url of the page (ex : 'www.ouest-france.fr' or 'actu.fr')
 ##  - REGISTER_NAME         : [String] common name of the media (ex : 'Ouest-France' or 'Actu')
+##
 class REGISTER_TABLE:
     NAME = "register_table"
     # Columns :
     COL_URL_SHORT = "register_url_short"
     COL_COMMON_NAME = "register_common_name"
     # Variables :
-    listColumns = [COL_URL_SHORT, COL_COMMON_NAME]
-    listKeys = [COL_URL_SHORT]
     dicStructure = {COL_URL_SHORT: "text",
                     COL_COMMON_NAME: "text"}
+    listKeys = [COL_URL_SHORT]
+    listColumns = list(dicStructure.keys())
 
-## # # # #     Register table     # # # # #
+## # # # #     Youtube links table     # # # # #
 ##
 ## Structure :
-##  - REGISTER_SHORT_URL    : [String] short url of the page (ex : 'www.ouest-france.fr' or 'actu.fr')
-##  - REGISTER_NAME         : [String] common name of the media (ex : 'Ouest-France' or 'Actu')
+##  - LINKS_YOUTUBE_URL         : [String] full youtube url
+##  - LINKS_YOUTUBE_CHANNEL     : [String] if it is a video link, name of the author channel
+##  - LINKS_YOUTUBE_MSG         : [String] message of the link analysis
+##
+NOT_FOUND = "NOT_FOUND"
+class LINKS_YTB_TABLE:
+    NAME = "links_ytb_table"
+    # Columns :
+    COL_URL = "links_ytb_url"
+    COL_CHANNEL = "links_ytb_channel"
+    COL_MSG = "links_ytb_msg"
+    # Variables :
+    dicStructure = {COL_URL: "text",
+                    COL_CHANNEL: "text",
+                    COL_MSG: "text"}
+    listKeys = [COL_URL]
+    listColumns = list(dicStructure.keys())
+
+## # # # #     Blacklist table     # # # # #
+##
+## Structure :
+##  - BLACKLIST_URL         : [String] short or full blacklisted url
+##  - BLACKLIST_REASON      : [String] reason why it is blacklisted (mandatory)
+##
 class BLACKLIST_TABLE:
     NAME = "blacklist_table"
     # Columns :
     COL_URL = "blacklist_url"
     COL_REASON = "blacklist_reason"
     # Variables :
-    listColumns = [COL_URL, COL_REASON]
-    listKeys = [COL_URL]
     dicStructure = {COL_URL: "text",
                     COL_REASON: "text"}
+    listKeys = [COL_URL]
+    listColumns = list(dicStructure.keys())
 
 
 # List of all XXX_TABLE objects :
