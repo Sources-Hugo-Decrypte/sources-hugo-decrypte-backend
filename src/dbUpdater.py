@@ -158,8 +158,9 @@ class DatabaseUpdater(object):
                     if logEn: self.logger.info(f"New short url '{shortUrl}'")
             except Exception:
                 self.logger.exception(f"Error occurred with short url '{shortUrl}'")
+        if logEn: self.logger.info("Update done")
 
-    def step41_linksYtbTable_updateTable(self, logEn=True):
+    def step41_links_updateLinksYtbTable(self, logEn=True):
         listYoutubeSpecificShortUrl = ('youtube.com', 'www.youtube.com', 'm.youtube.com', 'gaming.youtube.com', 'youtu.be', 'www.youtu.be')
         whereRequest = f"{URL_TABLE.COL_URL_SHORT}='{listYoutubeSpecificShortUrl[0]}'"
         for i in range(1, len(listYoutubeSpecificShortUrl)):
@@ -169,6 +170,7 @@ class DatabaseUpdater(object):
                                       f"WHERE {whereRequest}")
         listLinks = [queryResult[i][0] for i in range(len(queryResult))]
         listLinksKnown = self.db.getKeyValues(tableName=LINKS_YTB_TABLE.NAME)
+        if len(listLinksKnown)>0: listLinksKnown = [listLinksKnown[i][0] for i in range(len(listLinksKnown))]
         # Analyse links :
         for link in listLinks:
             if link not in listLinksKnown:
@@ -186,27 +188,40 @@ class DatabaseUpdater(object):
                         if logEn: self.logger.info(f"Analysis OK. Not a source : '{link}'")
                     except Exception:
                         self.logger.exception(f"Error with link '{link}'")
+        if logEn: self.logger.info("Update done")
 
-    def step91_blacklistTable_updateTable(self, logEn=True):
+    def step81_blacklistTable_updateTable(self, logEn=True):
         listBlacklistedUrlsKnown = self.db.getKeyValues(tableName=BLACKLIST_TABLE.NAME)
+        if len(listBlacklistedUrlsKnown)>0 : listBlacklistedUrlsKnown = [listBlacklistedUrlsKnown[i][0] for i in range(len(listBlacklistedUrlsKnown))]
         # Blacklisting based on ytb link analysis :
         queryResult = self.db.doQuery(f"SELECT * FROM {LINKS_YTB_TABLE.NAME} "
                                       f"WHERE NOT {LINKS_YTB_TABLE.COL_MSG}='OK'")
+        listColumnsLinksYtbTable = self.db.getColumnsNames(tableName=LINKS_YTB_TABLE.NAME)
         for element in queryResult:
-            link = element[LINKS_YTB_TABLE.listColumns.index(LINKS_YTB_TABLE.COL_URL)]
+            link = element[listColumnsLinksYtbTable.index(LINKS_YTB_TABLE.COL_URL)]
             if link not in listBlacklistedUrlsKnown:
                 try:
-                    reason = element[LINKS_YTB_TABLE.listColumns.index(LINKS_YTB_TABLE.COL_MSG)]
+                    reason = "Ytb link analysis | " + element[listColumnsLinksYtbTable.index(LINKS_YTB_TABLE.COL_MSG)]
                     self.db.insertInto(tableName=BLACKLIST_TABLE.NAME, dicData={BLACKLIST_TABLE.COL_URL: link,
                                                                                 BLACKLIST_TABLE.COL_REASON: reason})
                     if logEn: self.logger.info(f"Ytb link blacklisted : '{link}'. Reason : '{reason}'")
                 except Exception:
                     self.logger.exception(f"Error occurred with link : '{link}'")
         # Blacklisting based on ytb channels :
-        # queryResults = self.db.doQuery(f"SELECT {BLACKLIST_YTB_CHANNEL_TABLE.COL_NAME},{BLACKLIST_YTB_CHANNEL_TABLE.COL_REASON} "
-        #                                f"FROM {LINKS_YTB_TABLE.NAME} INNER JOIN {BLACKLIST_YTB_CHANNEL_TABLE.NAME} "
-        #                                f"ON {LINKS_YTB_TABLE.COL_CHANNEL}={BLACKLIST_YTB_CHANNEL_TABLE.COL_NAME}")
-        # print(queryResults)
+        queryResult = self.db.doQuery(f"SELECT {LINKS_YTB_TABLE.COL_URL},{LINKS_YTB_TABLE.COL_CHANNEL},{BLACKLIST_YTB_CHANNEL_TABLE.COL_REASON} "
+                                      f"FROM {LINKS_YTB_TABLE.NAME} INNER JOIN {BLACKLIST_YTB_CHANNEL_TABLE.NAME} "
+                                      f"ON {LINKS_YTB_TABLE.COL_CHANNEL}={BLACKLIST_YTB_CHANNEL_TABLE.COL_NAME}")
+        for element in queryResult:
+            link = element[0]
+            if link not in listBlacklistedUrlsKnown:
+                try:
+                    reason = "Ytb channel blacklisted | " + element[2]
+                    self.db.insertInto(tableName=BLACKLIST_TABLE.NAME, dicData={BLACKLIST_TABLE.COL_URL: link,
+                                                                                BLACKLIST_TABLE.COL_REASON: reason})
+                    if logEn: self.logger.info(f"Ytb link blacklisted : '{link}'. Reason : '{reason}'")
+                except Exception:
+                    self.logger.exception(f"Error occurred with link : '{link}'")
+        if logEn: self.logger.info("Update done")
 
 
     ##### global procedures #####
@@ -220,6 +235,8 @@ class DatabaseUpdater(object):
             self.step21_urlTable_createRowsFromListVideoId(listVideoId=listVideoId)
             # self.step22_urlTable_addCheck(listVideoId=listVideoId)
             self.step31_registerTable_updateTable()
+            self.step41_links_updateLinksYtbTable()
+            self.step81_blacklistTable_updateTable()
         self.logger.info("End of daily update procedure")
 
 
