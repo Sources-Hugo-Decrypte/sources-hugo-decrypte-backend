@@ -228,7 +228,7 @@ class DatabaseUpdater(object):
 
     def dailyUpdate(self):
         self.logger.info("Start daily update procedure")
-        listVideoId = self.step01_generic_checkNewVideos(limit=3)
+        listVideoId = self.step01_generic_checkNewVideos(limit=5)
         if len(listVideoId)!=0:
             self.step11_videoTable_createRowsFromListVideoId(listVideoId=listVideoId)
             self.step12_videoTable_addVideoDetails(listVideoId=listVideoId)
