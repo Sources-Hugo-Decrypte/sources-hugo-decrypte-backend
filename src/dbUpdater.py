@@ -267,20 +267,38 @@ class DatabaseManualSettings(object):
 
     ########## setting methods ##########
 
-    def fillBlacklistTable(self):
+    def fillBlacklistTable(self, logEn=True):
+        listBlacklistedUrlsKnown = self.updater.db.getKeyValues(tableName=BLACKLIST_TABLE.NAME)
+        if len(listBlacklistedUrlsKnown) > 0: listBlacklistedUrlsKnown = [listBlacklistedUrlsKnown[i][0] for i in range(len(listBlacklistedUrlsKnown))]
         for element in LIST_BLACKLISTED_URL:
-            try:
-                self.updater.addUrlToBlacklist(url=element[0], reason=element[1])
-            except Exception:
-                self.logger.exception(f"Error occurred with url '{element[0]}'")
+            if element[0] not in listBlacklistedUrlsKnown:
+                try:
+                    self.updater.addUrlToBlacklist(url=element[0], reason=element[1])
+                    if logEn: self.logger.info(f"Element added to {BLACKLIST_TABLE.NAME}. Url : '{element[0]}'. Reason : '{element[1]}'")
+                except Exception:
+                    self.logger.exception(f"Error occurred with url '{element[0]}'")
+        if logEn: self.logger.info("Filling done")
 
-    def fillYtbChannelBlacklistTable(self):
+    def fillYtbChannelBlacklistTable(self, logEn=True):
+        listBlacklistedChannelsKnown = self.updater.db.getKeyValues(tableName=BLACKLIST_YTB_CHANNEL_TABLE.NAME)
+        if len(listBlacklistedChannelsKnown) > 0: listBlacklistedChannelsKnown = [listBlacklistedChannelsKnown[i][0] for i in range(len(listBlacklistedChannelsKnown))]
         for element in LIST_BLACKLISTED_YTB_CHANNEL:
-            try:
-                self.addToBlacklistedYtbChannel(channelName=element[0], reason=element[1])
-            except Exception:
-                self.logger.exception(f"Error occurred with channel '{element[0]}'")
+            if element[0] not in listBlacklistedChannelsKnown:
+                try:
+                    self.addToBlacklistedYtbChannel(channelName=element[0], reason=element[1])
+                    if logEn: self.logger.info(f"Element added to {BLACKLIST_YTB_CHANNEL_TABLE.NAME}. Channel : '{element[0]}'. Reason : '{element[1]}'")
+                except Exception:
+                    self.logger.exception(f"Error occurred with channel '{element[0]}'")
+        if logEn: self.logger.info("Filling done")
 
+    ########## main method ##########
+
+    def update(self):
+        # Update manual settings :
+        self.fillBlacklistTable()
+        self.fillYtbChannelBlacklistTable()
+        # Update blacklist table :
+        self.updater.step81_blacklistTable_updateTable()
 
 
 
