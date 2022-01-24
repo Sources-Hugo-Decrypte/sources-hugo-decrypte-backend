@@ -101,7 +101,7 @@ class DatabaseUpdater(object):
             try:
                 dicVideoDetails = self.db.getRow(tableName=VIDEO_TABLE.NAME, dicKeysValues={VIDEO_TABLE.COL_ID: videoId})
                 assert dicVideoDetails[VIDEO_TABLE.COL_DESC] not in [DB_DEFAULT_VALUE, ''], f"No description for video id '{videoId}'"
-                listUrl = getAllUrlsFromDescrption(dicVideoDetails[VIDEO_TABLE.COL_DESC])
+                listUrl = getAllUrlsFromDescription(dicVideoDetails[VIDEO_TABLE.COL_DESC])
                 for url in listUrl:
                     try:
                         shortUrl = getShortUrl(url)
@@ -154,7 +154,9 @@ class DatabaseUpdater(object):
         for shortUrl in listShortUrl:
             try:
                 if shortUrl not in listShortUrlKnown:
-                    self.db.insertInto(tableName=REGISTER_TABLE.NAME, dicData={REGISTER_TABLE.COL_URL_SHORT: shortUrl})
+                    domainUrl = getDomainUrl(shortUrl)
+                    self.db.insertInto(tableName=REGISTER_TABLE.NAME, dicData={REGISTER_TABLE.COL_URL_SHORT: shortUrl,
+                                                                               REGISTER_TABLE.COL_COMMON_NAME: domainUrl})
                     if logEn: self.logger.info(f"New short url '{shortUrl}'")
             except Exception:
                 self.logger.exception(f"Error occurred with short url '{shortUrl}'")
