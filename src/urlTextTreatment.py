@@ -2,7 +2,7 @@
 from tldextract import extract
 from urlextract import URLExtract
 
-def getAllUrlsFromDescrption(textDesc, removeDuplicates=True):
+def getAllUrlsFromDescription(textDesc, removeDuplicates=True):
     assert isinstance(textDesc, str), f"Given desc should be a string. Given : {textDesc}"
     extractor = URLExtract()
     listUrls = extractor.find_urls(textDesc)
