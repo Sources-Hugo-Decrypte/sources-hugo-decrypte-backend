@@ -17,19 +17,11 @@ def getAllUrlsFromDescription(textDesc, removeDuplicates=True):
         listUrls = list(dict.fromkeys(listUrls))
     return listUrls
 
-def getShortUrl(url):
+def getShortUrl(url, domainOnly=False):
     subdomain, domain, suffix = extract(url)
-    if subdomain not in [None, ''] and domain not in [None, ''] and suffix not in [None, '']:
+    if subdomain not in [None, ''] and domain not in [None, ''] and suffix not in [None, ''] and not domainOnly:
         return f"{subdomain}.{domain}.{suffix}"
-    elif domain not in [None, ''] and suffix not in [None, '']:
+    elif domain not in [None, ''] and suffix not in [None, ''] and domainOnly:
         return f"{domain}.{suffix}"
     else:
         return url
-
-def getDomainUrl(url):
-    subdomain, domain, suffix = extract(url)
-    if domain not in [None, ''] and suffix not in [None, '']:
-        return f"{domain}.{suffix}"
-    else:
-        return url
-
