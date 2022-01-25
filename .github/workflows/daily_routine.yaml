@@ -2,7 +2,7 @@ name: Daily Routine
 
 on:
   schedule:
-    - cron: "0 23 * * *" # Runs at 21:00 UTC (at Paris it will be updated at 22h (UTC+1) or 23h in summer (UTC+2))
+    - cron: "0 23 * * *" # Runs at 23:00 UTC (at Paris it will be updated at 0h (UTC+1) or 1h in summer (UTC+2))
   workflow_dispatch:
 
 jobs:
