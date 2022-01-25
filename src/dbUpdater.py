@@ -154,7 +154,7 @@ class DatabaseUpdater(object):
         for shortUrl in listShortUrl:
             try:
                 if shortUrl not in listShortUrlKnown:
-                    domainUrl = getShortUrl(shortUrl, domainOnly=True)
+                    domainUrl = getDomainUrl(shortUrl)
                     self.db.insertInto(tableName=REGISTER_TABLE.NAME, dicData={REGISTER_TABLE.COL_URL_SHORT: shortUrl,
                                                                                REGISTER_TABLE.COL_COMMON_NAME: domainUrl})
                     if logEn: self.logger.info(f"New short url '{shortUrl}'. Domain url : '{domainUrl}'")
@@ -181,13 +181,13 @@ class DatabaseUpdater(object):
                     self.db.insertInto(tableName=LINKS_YTB_TABLE.NAME, dicData={LINKS_YTB_TABLE.COL_URL: link,
                                                                                 LINKS_YTB_TABLE.COL_CHANNEL: channelName,
                                                                                 LINKS_YTB_TABLE.COL_MSG: "OK"})
-                    if logEn: self.logger.info(f"Analysis OK. New source : '{link}'")
+                    if logEn: self.logger.info(f"Analysis OK. New video : '{link}'")
                 except Exception as e:
                     try:
                         self.db.insertInto(tableName=LINKS_YTB_TABLE.NAME, dicData={LINKS_YTB_TABLE.COL_URL: link,
                                                                                     LINKS_YTB_TABLE.COL_CHANNEL: "NOT_FOUND",
                                                                                     LINKS_YTB_TABLE.COL_MSG: str(e)})
-                        if logEn: self.logger.info(f"Analysis OK. Not a source : '{link}'")
+                        if logEn: self.logger.info(f"Analysis OK. Not a video : '{link}'")
                     except Exception:
                         self.logger.exception(f"Error with link '{link}'")
         if logEn: self.logger.info("Update done")
