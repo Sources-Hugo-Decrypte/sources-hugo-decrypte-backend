@@ -157,7 +157,7 @@ class DatabaseUpdater(object):
                     domainUrl = getShortUrl(shortUrl, domainOnly=True)
                     self.db.insertInto(tableName=REGISTER_TABLE.NAME, dicData={REGISTER_TABLE.COL_URL_SHORT: shortUrl,
                                                                                REGISTER_TABLE.COL_COMMON_NAME: domainUrl})
-                    if logEn: self.logger.info(f"New short url '{shortUrl}'")
+                    if logEn: self.logger.info(f"New short url '{shortUrl}'. Domain url : '{domainUrl}'")
             except Exception:
                 self.logger.exception(f"Error occurred with short url '{shortUrl}'")
         if logEn: self.logger.info("Update done")
