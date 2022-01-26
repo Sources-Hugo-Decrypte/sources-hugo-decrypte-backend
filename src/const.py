@@ -29,7 +29,7 @@ YTB_HUGO_CHANNEL_URL = "https://www.youtube.com/c/HugoD%C3%A9crypte"
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # Data base file :
-if os.environ["HDS_USE_DB_LOCALHOST"]:
+if os.getenv("HDS_USE_DB_LOCALHOST", 'False').capitalize()=="True":
     # --- used for local DB : -----
     DB_NAME = "HDSDB"
     DB_USER = "postgres"
