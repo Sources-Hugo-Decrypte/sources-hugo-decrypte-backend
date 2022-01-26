@@ -27,6 +27,8 @@ jobs:
           python -m pip install -e git+https://github.com/Sources-Hugo-Decrypte/pafy.git@develop#egg=pafy
           python -m pip install scrapetube
           python -m pip install urllib3
+          python -m pip install tldextract
+          python -m pip install urlextract
 
       - name: Daily routine
         env :
