@@ -163,7 +163,7 @@ class DatabaseUpdater(object):
         if logEn: self.logger.info("Update done")
 
     def step41_links_updateLinksYtbTable(self, logEn=True):
-        listYoutubeSpecificShortUrl = ('youtube.com', 'www.youtube.com', 'm.youtube.com', 'gaming.youtube.com', 'youtu.be', 'www.youtu.be')
+        listYoutubeSpecificShortUrl = ('youtube.com', 'www.youtube.com', 'm.youtube.com', 'gaming.youtube.com', 'youtu.be', 'www.youtu.be', 'yt.be')
         whereRequest = f"{URL_TABLE.COL_URL_SHORT}='{listYoutubeSpecificShortUrl[0]}'"
         for i in range(1, len(listYoutubeSpecificShortUrl)):
             whereRequest += f"OR {URL_TABLE.COL_URL_SHORT}='{listYoutubeSpecificShortUrl[i]}'"
@@ -195,7 +195,7 @@ class DatabaseUpdater(object):
     def step81_blacklistTable_updateTable(self, logEn=True):
         listBlacklistedUrlsKnown = self.db.getKeyValues(tableName=BLACKLIST_TABLE.NAME)
         if len(listBlacklistedUrlsKnown)>0 : listBlacklistedUrlsKnown = [listBlacklistedUrlsKnown[i][0] for i in range(len(listBlacklistedUrlsKnown))]
-        # Blacklisting based on ytb link analysis :
+        ##### Blacklisting based on ytb link analysis : #####
         queryResult = self.db.doQuery(f"SELECT * FROM {LINKS_YTB_TABLE.NAME} "
                                       f"WHERE NOT {LINKS_YTB_TABLE.COL_MSG}='OK'")
         listColumnsLinksYtbTable = self.db.getColumnsNames(tableName=LINKS_YTB_TABLE.NAME)
@@ -209,7 +209,7 @@ class DatabaseUpdater(object):
                     if logEn: self.logger.info(f"Ytb link blacklisted : '{link}'. Reason : '{reason}'")
                 except Exception:
                     self.logger.exception(f"Error occurred with link : '{link}'")
-        # Blacklisting based on ytb channels :
+        ##### Blacklisting based on ytb channels : #####
         queryResult = self.db.doQuery(f"SELECT {LINKS_YTB_TABLE.COL_URL},{LINKS_YTB_TABLE.COL_CHANNEL},{BLACKLIST_YTB_CHANNEL_TABLE.COL_REASON} "
                                       f"FROM {LINKS_YTB_TABLE.NAME} INNER JOIN {BLACKLIST_YTB_CHANNEL_TABLE.NAME} "
                                       f"ON {LINKS_YTB_TABLE.COL_CHANNEL}={BLACKLIST_YTB_CHANNEL_TABLE.COL_NAME}")
