@@ -36,7 +36,6 @@ jobs:
             HDS_DBSERVER_CONN_STRING: ${{ secrets.HDS_DBSERVER_CONN_STRING }}
             HDS_GMAIL_ADDRESS: ${{ secrets.HDS_GMAIL_ADDRESS }}
             HDS_GMAIL_APP_PASSWORD: ${{ secrets.HDS_GMAIL_APP_PASSWORD }}
-            HDS_USE_DB_LOCALHOST : False
         run: python src/main.py
 
       - name : Send email if workflow failed
