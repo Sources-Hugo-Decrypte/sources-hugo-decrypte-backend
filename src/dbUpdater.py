@@ -223,6 +223,71 @@ class DatabaseUpdater(object):
                     if logEn: self.logger.info(f"Ytb link blacklisted : '{link}'. Reason : '{reason}'")
                 except Exception:
                     self.logger.exception(f"Error occurred with link : '{link}'")
+        ##### Blacklisting 'instagram' urls : #####
+        ##### Caution : so far we don't check if a post was published by HugoDecrypte (and if so, we should blacklist it)
+        queryResult = self.db.doQuery(f"SELECT DISTINCT {URL_TABLE.COL_URL_FULL} FROM {URL_TABLE.NAME} "
+                                      f"INNER JOIN {REGISTER_TABLE.NAME} ON {URL_TABLE.COL_URL_SHORT}={REGISTER_TABLE.COL_URL_SHORT} "
+                                      f"WHERE {REGISTER_TABLE.COL_COMMON_NAME} LIKE '%instagram%' "
+                                      f"AND NOT {URL_TABLE.COL_URL_FULL} LIKE '%/p/%'")
+        for element in queryResult:
+            link = element[0]
+            if link not in listBlacklistedUrlsKnown:
+                try:
+                    reason = "Not an instagram post"
+                    self.db.insertInto(tableName=BLACKLIST_TABLE.NAME, dicData={BLACKLIST_TABLE.COL_URL: link,
+                                                                                BLACKLIST_TABLE.COL_REASON: reason})
+                    if logEn: self.logger.info(f"Insta link blacklisted : '{link}'. Reason : '{reason}'")
+                except Exception:
+                    self.logger.exception(f"Error occurred with link : '{link}'")
+        ##### Blacklisting 'twitter' urls : #####
+        queryResult = self.db.doQuery(f"SELECT DISTINCT {URL_TABLE.COL_URL_FULL} FROM {URL_TABLE.NAME} "
+                                      f"INNER JOIN {REGISTER_TABLE.NAME} ON {URL_TABLE.COL_URL_SHORT}={REGISTER_TABLE.COL_URL_SHORT} "
+                                      f"WHERE {REGISTER_TABLE.COL_COMMON_NAME} LIKE '%twitter%' "
+                                      f"AND NOT {URL_TABLE.COL_URL_FULL} LIKE '%/status/%'")
+        for element in queryResult:
+            link = element[0]
+            if link not in listBlacklistedUrlsKnown:
+                try:
+                    reason = "Not a twitter post"
+                    self.db.insertInto(tableName=BLACKLIST_TABLE.NAME, dicData={BLACKLIST_TABLE.COL_URL: link,
+                                                                                BLACKLIST_TABLE.COL_REASON: reason})
+                    if logEn: self.logger.info(f"Twitter link blacklisted : '{link}'. Reason : '{reason}'")
+                except Exception:
+                    self.logger.exception(f"Error occurred with link : '{link}'")
+        ##### Blacklisting 'HugoTravers' twitter publications : #####
+        queryResult = self.db.doQuery(f"SELECT DISTINCT {URL_TABLE.COL_URL_FULL} FROM {URL_TABLE.NAME} "
+                                      f"INNER JOIN {REGISTER_TABLE.NAME} ON {URL_TABLE.COL_URL_SHORT}={REGISTER_TABLE.COL_URL_SHORT} "
+                                      f"WHERE {REGISTER_TABLE.COL_COMMON_NAME} LIKE '%twitter%' "
+                                      f"AND {URL_TABLE.COL_URL_FULL} LIKE '%/status/%' "
+                                      f"AND {URL_TABLE.COL_URL_FULL} LIKE '%/HugoTravers/%'")
+        for element in queryResult:
+            link = element[0]
+            if link not in listBlacklistedUrlsKnown:
+                try:
+                    reason = "Twitter publication posted by HugoTravers"
+                    self.db.insertInto(tableName=BLACKLIST_TABLE.NAME, dicData={BLACKLIST_TABLE.COL_URL: link,
+                                                                                BLACKLIST_TABLE.COL_REASON: reason})
+                    if logEn: self.logger.info(f"Twitter link blacklisted : '{link}'. Reason : '{reason}'")
+                except Exception:
+                    self.logger.exception(f"Error occurred with link : '{link}'")
+        ##### Blacklisting 'facebook' links : #####
+        queryResult = self.db.doQuery(f"SELECT DISTINCT {URL_TABLE.COL_URL_FULL} FROM {URL_TABLE.NAME} "
+                                      f"INNER JOIN {REGISTER_TABLE.NAME} ON {URL_TABLE.COL_URL_SHORT}={REGISTER_TABLE.COL_URL_SHORT} "
+                                      f"WHERE {REGISTER_TABLE.COL_COMMON_NAME} LIKE '%facebook%' "
+                                      f"AND NOT ({URL_TABLE.COL_URL_FULL} LIKE '%/posts/%' "
+                                                f"OR {URL_TABLE.COL_URL_FULL} LIKE '%/videos/%' "
+                                                f"OR {URL_TABLE.COL_URL_FULL} LIKE '%/events/%')")
+        for element in queryResult:
+            link = element[0]
+            if link not in listBlacklistedUrlsKnown:
+                try:
+                    reason = "Not a facebook publication"
+                    self.db.insertInto(tableName=BLACKLIST_TABLE.NAME, dicData={BLACKLIST_TABLE.COL_URL: link,
+                                                                                BLACKLIST_TABLE.COL_REASON: reason})
+                    if logEn: self.logger.info(f"Facebook link blacklisted : '{link}'. Reason : '{reason}'")
+                except Exception:
+                    self.logger.exception(f"Error occurred with link : '{link}'")
+
         if logEn: self.logger.info("Update done")
 
 
@@ -236,9 +301,9 @@ class DatabaseUpdater(object):
             self.step12_videoTable_addVideoDetails(listVideoId=listVideoId)
             self.step21_urlTable_createRowsFromListVideoId(listVideoId=listVideoId)
             # self.step22_urlTable_addCheck(listVideoId=listVideoId)
-            self.step31_registerTable_updateTable()
-            self.step41_links_updateLinksYtbTable()
-            self.step81_blacklistTable_updateTable()
+        self.step31_registerTable_updateTable()
+        self.step41_links_updateLinksYtbTable()
+        self.step81_blacklistTable_updateTable()
         self.logger.info("End of daily update procedure")
 
 
