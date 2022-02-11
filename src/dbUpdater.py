@@ -288,8 +288,20 @@ class DatabaseUpdater(object):
                 except Exception:
                     self.logger.exception(f"Error occurred with link : '{link}'")
 
-        # To DO : blacklist links if register_short_url = register_common_names (correspond to links manually written
-        # by HD in the video's desc (like 'Brief.me, ...))
+        ##### blacklist links if register_short_url = register_common_names (correspond to links manually written
+        # by HD in the video's desc (like 'Brief.me, ...)) #####
+        queryResult = self.db.doQuery(f"SELECT DISTINCT {URL_TABLE.COL_URL_FULL} FROM {URL_TABLE.NAME} "
+                                      f"WHERE {URL_TABLE.COL_URL_FULL}={URL_TABLE.COL_URL_SHORT}")
+        for element in queryResult:
+            link = element[0]
+            if link not in listBlacklistedUrlsKnown:
+                try:
+                    reason = "General name of a website. Not precise enough to be a source"
+                    self.db.insertInto(tableName=BLACKLIST_TABLE.NAME, dicData={BLACKLIST_TABLE.COL_URL: link,
+                                                                                BLACKLIST_TABLE.COL_REASON: reason})
+                    if logEn: self.logger.info(f"General link blacklisted : '{link}'. Reason : '{reason}'")
+                except:
+                    self.logger.exception(f"Error occurred with link : '{link}'")
 
         if logEn: self.logger.info("Update done")
 
