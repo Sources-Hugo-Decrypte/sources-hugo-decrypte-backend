@@ -288,6 +288,9 @@ class DatabaseUpdater(object):
                 except Exception:
                     self.logger.exception(f"Error occurred with link : '{link}'")
 
+        # To DO : blacklist links if register_short_url = register_common_names (correspond to links manually written
+        # by HD in the video's desc (like 'Brief.me, ...))
+
         if logEn: self.logger.info("Update done")
 
 
