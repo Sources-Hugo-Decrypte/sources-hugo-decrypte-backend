@@ -30,6 +30,8 @@ YTB_HUGO_CHANNEL_URL = "https://www.youtube.com/c/HugoD%C3%A9crypte"
 
 # Data base file :
 if os.getenv("HDS_USE_DB_LOCALHOST", 'False').capitalize()=="True":
+    choseLocalDatabase = str(input("Will use local database. Continue? y/n: ")).lower()
+    assert choseLocalDatabase in ['yes', 'ye', 'y'], "Abort. Will not use local database"
     # --- used for local DB : -----
     DB_NAME = "HDSDB"
     DB_USER = "postgres"
@@ -186,13 +188,13 @@ DB_LIST_TABLES_OBJ = [VIDEO_TABLE,
 
 # Structure is as follows : ((url, reason_of_blacklisting), (url, reason_of_blacklisting), ...)
 LIST_BLACKLISTED_URL = (("radio-londres.fr", "This is and old domain name, owned by Hugo Travers, for one of the projects he made. It now redirects to his youtube home page account"),
-                        ("https://open.spotify.com/show/6y1PloEyNsCNJH9vHias4T?si=pz8U9CGkTCO_IGSEnMVxVw", "Hugo Decrypte's podcasts home page"),
-                        ("https://drive.google.com/folderview?id=0B7ef7p49PPuUTVVVU0JsMWRVY3c&usp=sharing", "Google drive document shared by Hugo Decrypte"),
+                        ("https://open.spotify.com/show/6y1PloEyNsCNJH9vHias4T?si=pz8U9CGkTCO_IGSEnMVxVw", "Hugo Decrypte's podcasts home page"),               # TO DO : remove and update blacklist table
+                        ("https://drive.google.com/folderview?id=0B7ef7p49PPuUTVVVU0JsMWRVY3c&usp=sharing", "Google drive document shared by Hugo Decrypte"),   # TO DO : remove and update blacklist table
                         ("twitch.tv", "So far, Hugo Decrypte never gave any 'twitch' link that is not a main page account url"),
                         ("www.twitch.tv", "So far, Hugo Decrypte never gave any 'twitch' link that is not a main page account url"),
                         ("m.twitch.tv", "So far, Hugo Decrypte never gave any 'twitch' link that is not a main page account url"),
                         ("m.me", "Messenger urls are not considered as a source"),
-                        ("www.tipee.com", "Tipee urls are not considered as a source"),
+                        ("www.tipeee.com", "Tipeee urls are not considered as a source"),
                         ("soundcloud.com", "Soundcloud urls are not considered as a source"),
                         ("m.soundcloud.com", "Soundcloud urls are not considered as a source"),
                         ("open.spotify.com", "Spotify urls are not considered as a source"), # NEED TO BE IMPROVED : What if Hugo Decrypte gives a podcast's url on which he based his video ?
