@@ -42,6 +42,21 @@ class DatabaseUpdater(object):
         self.db.insertInto(tableName=BLACKLIST_TABLE.NAME, dicData={BLACKLIST_TABLE.COL_URL: url,
                                                                     BLACKLIST_TABLE.COL_REASON: reason})
 
+    def blacklistFilter(self, query, reason, listBlacklistedUrlsKnown, logEn=True):
+        assert isinstance(query, str), f"'query' should be a string. Given : {query}"
+        assert isinstance(reason, str), f"'reason' should be a string. Given : {reason}"
+        assert isinstance(listBlacklistedUrlsKnown, list), f"'listBlacklistedUrlsKnown' should be a list. Given : {listBlacklistedUrlsKnown}"
+        queryResult = self.db.doQuery(query)
+        for element in queryResult:
+            link = element[0]
+            if link not in listBlacklistedUrlsKnown:
+                try:
+                    self.db.insertInto(tableName=BLACKLIST_TABLE.NAME, dicData={BLACKLIST_TABLE.COL_URL: link,
+                                                                                BLACKLIST_TABLE.COL_REASON: reason})
+                    if logEn: self.logger.info(f"General link blacklisted : '{link}'. Reason : '{reason}'")
+                except:
+                    self.logger.exception(f"Error occurred with link : '{link}'")
+
     ########## DB update procedure methods ##########
 
     def step01_generic_checkNewVideos(self, limit, logEn=True):
@@ -225,83 +240,41 @@ class DatabaseUpdater(object):
                     self.logger.exception(f"Error occurred with link : '{link}'")
         ##### Blacklisting 'instagram' urls : #####
         ##### Caution : so far we don't check if a post was published by HugoDecrypte (and if so, we should blacklist it)
-        queryResult = self.db.doQuery(f"SELECT DISTINCT {URL_TABLE.COL_URL_FULL} FROM {URL_TABLE.NAME} "
-                                      f"INNER JOIN {REGISTER_TABLE.NAME} ON {URL_TABLE.COL_URL_SHORT}={REGISTER_TABLE.COL_URL_SHORT} "
-                                      f"WHERE {REGISTER_TABLE.COL_COMMON_NAME} LIKE '%instagram%' "
-                                      f"AND NOT {URL_TABLE.COL_URL_FULL} LIKE '%/p/%'")
-        for element in queryResult:
-            link = element[0]
-            if link not in listBlacklistedUrlsKnown:
-                try:
-                    reason = "Not an instagram post"
-                    self.db.insertInto(tableName=BLACKLIST_TABLE.NAME, dicData={BLACKLIST_TABLE.COL_URL: link,
-                                                                                BLACKLIST_TABLE.COL_REASON: reason})
-                    if logEn: self.logger.info(f"Insta link blacklisted : '{link}'. Reason : '{reason}'")
-                except Exception:
-                    self.logger.exception(f"Error occurred with link : '{link}'")
+        self.blacklistFilter(query=f"SELECT DISTINCT {URL_TABLE.COL_URL_FULL} FROM {URL_TABLE.NAME} "
+                                  f"INNER JOIN {REGISTER_TABLE.NAME} ON {URL_TABLE.COL_URL_SHORT}={REGISTER_TABLE.COL_URL_SHORT} "
+                                  f"WHERE {REGISTER_TABLE.COL_COMMON_NAME} LIKE '%instagram%' "
+                                  f"AND NOT {URL_TABLE.COL_URL_FULL} LIKE '%/p/%'",
+                             reason="Not an instagram post",
+                             listBlacklistedUrlsKnown=listBlacklistedUrlsKnown)
         ##### Blacklisting 'twitter' urls : #####
-        queryResult = self.db.doQuery(f"SELECT DISTINCT {URL_TABLE.COL_URL_FULL} FROM {URL_TABLE.NAME} "
-                                      f"INNER JOIN {REGISTER_TABLE.NAME} ON {URL_TABLE.COL_URL_SHORT}={REGISTER_TABLE.COL_URL_SHORT} "
-                                      f"WHERE {REGISTER_TABLE.COL_COMMON_NAME} LIKE '%twitter%' "
-                                      f"AND NOT {URL_TABLE.COL_URL_FULL} LIKE '%/status/%'")
-        for element in queryResult:
-            link = element[0]
-            if link not in listBlacklistedUrlsKnown:
-                try:
-                    reason = "Not a twitter post"
-                    self.db.insertInto(tableName=BLACKLIST_TABLE.NAME, dicData={BLACKLIST_TABLE.COL_URL: link,
-                                                                                BLACKLIST_TABLE.COL_REASON: reason})
-                    if logEn: self.logger.info(f"Twitter link blacklisted : '{link}'. Reason : '{reason}'")
-                except Exception:
-                    self.logger.exception(f"Error occurred with link : '{link}'")
+        self.blacklistFilter(query=f"SELECT DISTINCT {URL_TABLE.COL_URL_FULL} FROM {URL_TABLE.NAME} "
+                                  f"INNER JOIN {REGISTER_TABLE.NAME} ON {URL_TABLE.COL_URL_SHORT}={REGISTER_TABLE.COL_URL_SHORT} "
+                                  f"WHERE {REGISTER_TABLE.COL_COMMON_NAME} LIKE '%twitter%' "
+                                  f"AND NOT {URL_TABLE.COL_URL_FULL} LIKE '%/status/%'",
+                             reason="Not a twitter post",
+                             listBlacklistedUrlsKnown=listBlacklistedUrlsKnown)
         ##### Blacklisting 'HugoTravers' twitter publications : #####
-        queryResult = self.db.doQuery(f"SELECT DISTINCT {URL_TABLE.COL_URL_FULL} FROM {URL_TABLE.NAME} "
-                                      f"INNER JOIN {REGISTER_TABLE.NAME} ON {URL_TABLE.COL_URL_SHORT}={REGISTER_TABLE.COL_URL_SHORT} "
-                                      f"WHERE {REGISTER_TABLE.COL_COMMON_NAME} LIKE '%twitter%' "
-                                      f"AND {URL_TABLE.COL_URL_FULL} LIKE '%/status/%' "
-                                      f"AND {URL_TABLE.COL_URL_FULL} LIKE '%/HugoTravers/%'")
-        for element in queryResult:
-            link = element[0]
-            if link not in listBlacklistedUrlsKnown:
-                try:
-                    reason = "Twitter publication posted by HugoTravers"
-                    self.db.insertInto(tableName=BLACKLIST_TABLE.NAME, dicData={BLACKLIST_TABLE.COL_URL: link,
-                                                                                BLACKLIST_TABLE.COL_REASON: reason})
-                    if logEn: self.logger.info(f"Twitter link blacklisted : '{link}'. Reason : '{reason}'")
-                except Exception:
-                    self.logger.exception(f"Error occurred with link : '{link}'")
+        self.blacklistFilter(query=f"SELECT DISTINCT {URL_TABLE.COL_URL_FULL} FROM {URL_TABLE.NAME} "
+                                  f"INNER JOIN {REGISTER_TABLE.NAME} ON {URL_TABLE.COL_URL_SHORT}={REGISTER_TABLE.COL_URL_SHORT} "
+                                  f"WHERE {REGISTER_TABLE.COL_COMMON_NAME} LIKE '%twitter%' "
+                                  f"AND {URL_TABLE.COL_URL_FULL} LIKE '%/status/%' "
+                                  f"AND {URL_TABLE.COL_URL_FULL} LIKE '%/HugoTravers/%'",
+                             reason="Twitter publication posted by HugoTravers",
+                             listBlacklistedUrlsKnown=listBlacklistedUrlsKnown)
         ##### Blacklisting 'facebook' links : #####
-        queryResult = self.db.doQuery(f"SELECT DISTINCT {URL_TABLE.COL_URL_FULL} FROM {URL_TABLE.NAME} "
-                                      f"INNER JOIN {REGISTER_TABLE.NAME} ON {URL_TABLE.COL_URL_SHORT}={REGISTER_TABLE.COL_URL_SHORT} "
-                                      f"WHERE {REGISTER_TABLE.COL_COMMON_NAME} LIKE '%facebook%' "
-                                      f"AND NOT ({URL_TABLE.COL_URL_FULL} LIKE '%/posts/%' "
-                                                f"OR {URL_TABLE.COL_URL_FULL} LIKE '%/videos/%' "
-                                                f"OR {URL_TABLE.COL_URL_FULL} LIKE '%/events/%')")
-        for element in queryResult:
-            link = element[0]
-            if link not in listBlacklistedUrlsKnown:
-                try:
-                    reason = "Not a facebook publication"
-                    self.db.insertInto(tableName=BLACKLIST_TABLE.NAME, dicData={BLACKLIST_TABLE.COL_URL: link,
-                                                                                BLACKLIST_TABLE.COL_REASON: reason})
-                    if logEn: self.logger.info(f"Facebook link blacklisted : '{link}'. Reason : '{reason}'")
-                except Exception:
-                    self.logger.exception(f"Error occurred with link : '{link}'")
-
-        ##### blacklist links if register_short_url = register_common_names (correspond to links manually written
-        # by HD in the video's desc (like 'Brief.me, ...)) #####
-        queryResult = self.db.doQuery(f"SELECT DISTINCT {URL_TABLE.COL_URL_FULL} FROM {URL_TABLE.NAME} "
-                                      f"WHERE {URL_TABLE.COL_URL_FULL}={URL_TABLE.COL_URL_SHORT}")
-        for element in queryResult:
-            link = element[0]
-            if link not in listBlacklistedUrlsKnown:
-                try:
-                    reason = "General name of a website. Not precise enough to be a source"
-                    self.db.insertInto(tableName=BLACKLIST_TABLE.NAME, dicData={BLACKLIST_TABLE.COL_URL: link,
-                                                                                BLACKLIST_TABLE.COL_REASON: reason})
-                    if logEn: self.logger.info(f"General link blacklisted : '{link}'. Reason : '{reason}'")
-                except:
-                    self.logger.exception(f"Error occurred with link : '{link}'")
+        self.blacklistFilter(query=f"SELECT DISTINCT {URL_TABLE.COL_URL_FULL} FROM {URL_TABLE.NAME} "
+                                   f"INNER JOIN {REGISTER_TABLE.NAME} ON {URL_TABLE.COL_URL_SHORT}={REGISTER_TABLE.COL_URL_SHORT} "
+                                  f"WHERE {REGISTER_TABLE.COL_COMMON_NAME} LIKE '%facebook%' "
+                                  f"AND NOT ({URL_TABLE.COL_URL_FULL} LIKE '%/posts/%' "
+                                            f"OR {URL_TABLE.COL_URL_FULL} LIKE '%/videos/%' "
+                                            f"OR {URL_TABLE.COL_URL_FULL} LIKE '%/events/%')",
+                             reason="Not a facebook publication",
+                             listBlacklistedUrlsKnown=listBlacklistedUrlsKnown)
+        ##### Blacklisting links if register_short_url = register_common_names (correspond to links manually written by HD in the video's desc (like 'Brief.me, ...)) #####
+        self.blacklistFilter(query=f"SELECT DISTINCT {URL_TABLE.COL_URL_FULL} FROM {URL_TABLE.NAME} "
+                                   f"WHERE {URL_TABLE.COL_URL_FULL}={URL_TABLE.COL_URL_SHORT}",
+                             reason="General name of a website. Not precise enough to be a source",
+                             listBlacklistedUrlsKnown=listBlacklistedUrlsKnown)
 
         if logEn: self.logger.info("Update done")
 
