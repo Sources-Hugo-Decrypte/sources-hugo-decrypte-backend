@@ -188,8 +188,6 @@ DB_LIST_TABLES_OBJ = [VIDEO_TABLE,
 
 # Structure is as follows : ((url, reason_of_blacklisting), (url, reason_of_blacklisting), ...)
 LIST_BLACKLISTED_URL = (("radio-londres.fr", "This is and old domain name, owned by Hugo Travers, for one of the projects he made. It now redirects to his youtube home page account"),
-                        ("https://open.spotify.com/show/6y1PloEyNsCNJH9vHias4T?si=pz8U9CGkTCO_IGSEnMVxVw", "Hugo Decrypte's podcasts home page"),               # TO DO : remove and update blacklist table
-                        ("https://drive.google.com/folderview?id=0B7ef7p49PPuUTVVVU0JsMWRVY3c&usp=sharing", "Google drive document shared by Hugo Decrypte"),   # TO DO : remove and update blacklist table
                         ("twitch.tv", "So far, Hugo Decrypte never gave any 'twitch' link that is not a main page account url"),
                         ("www.twitch.tv", "So far, Hugo Decrypte never gave any 'twitch' link that is not a main page account url"),
                         ("m.twitch.tv", "So far, Hugo Decrypte never gave any 'twitch' link that is not a main page account url"),
@@ -198,7 +196,9 @@ LIST_BLACKLISTED_URL = (("radio-londres.fr", "This is and old domain name, owned
                         ("soundcloud.com", "Soundcloud urls are not considered as a source"),
                         ("m.soundcloud.com", "Soundcloud urls are not considered as a source"),
                         ("open.spotify.com", "Spotify urls are not considered as a source"), # NEED TO BE IMPROVED : What if Hugo Decrypte gives a podcast's url on which he based his video ?
+                        ("spoti.fi", "Spotify urls are not considered as a source"), # NEED TO BE IMPROVED : What if Hugo Decrypte gives a podcast's url on which he based his video ?
                         ("itunes.apple.com", "Itunes urls are not considered as a source"),  # NEED TO BE IMPROVED : What if Hugo Decrypte gives a podcast's url on which he based his video ?
+                        ("https://apple.co/3aJ4VAq", "HugoDecrypte podcast"),
                         ("www.leohenry.fr", "Web site of one of HugoDecrypte's friends that is not a source"),
                         ("discord.gg", "Discord urls are not considered as a source"),
                         ("consent.yahoo.com", "Consent page. Not a source"),
@@ -209,7 +209,10 @@ LIST_BLACKLISTED_URL = (("radio-londres.fr", "This is and old domain name, owned
                         ("https://www.brief.me/?coupon_token=offre_HUGODECRYPTE", "Ad. Not a source"),
                         ("Brief.me", "Ad. Not a source"),
                         ("https://nordvpn.org/hugodecrypte", "Ad. Not a source"),
-                        ("http://timejump.me", "Texting app. Not a source")
+                        ("http://timejump.me", "Texting app. Not a source"),
+                        ("https://shows.acast.com/mashup-linterview", "HugoDecrypte podcasts"),
+                        ("https://shows.acast.com/mashup-les-actus", "HugoDecrypte podcasts"),
+                        ("https://www.tiktok.com/@hugodecrypte", "HugoDecrypte TikTok page")
                         )
 
 # Structure is as follows : ((channel_name, reason_of_blacklisting), (channel_name, reason_of_blacklisting), ...)
