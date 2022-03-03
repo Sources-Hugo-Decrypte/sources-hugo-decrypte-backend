@@ -34,9 +34,7 @@ jobs:
             HDS_DBSERVER_CONN_STRING: ${{ secrets.HDS_DBSERVER_CONN_STRING }}
             HDS_GMAIL_ADDRESS: ${{ secrets.HDS_GMAIL_ADDRESS }}
             HDS_GMAIL_APP_PASSWORD: ${{ secrets.HDS_GMAIL_APP_PASSWORD }}
-        run: |
-            python src/settings_fetchAll.py
-            python src/main.py
+        run: python src/main_fetchAll.py
 
       - name : Send email if workflow failed
         if: ${{ failure() }}
