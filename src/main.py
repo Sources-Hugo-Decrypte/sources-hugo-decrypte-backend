@@ -39,12 +39,9 @@ def emailProcedure():
               username=os.environ["HDS_GMAIL_ADDRESS"],
               password=os.environ["HDS_GMAIL_APP_PASSWORD"])
 
-## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-##                                       MAIN FUNCTION                                         #
-## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def doMain():
-    logging.basicConfig(level=logging.DEBUG)
 
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
     if not os.path.exists(LOG_PATH): os.mkdir(LOG_PATH)
     creationDate = datetime.now()
     # ----- Globals -----
@@ -72,17 +69,14 @@ def doMain():
 
     updater = DatabaseUpdater(logger=myLogger, database=DB_NAME, user=DB_USER, password=DB_PWD, host=DB_HOST)
     try:
-        atexit.register(emailProcedure)  # Schedule sending email at end of execution
+        atexit.register(emailProcedure) # Schedule sending email at end of execution
         timeStart = time()
         ### put below this line the tasks to execute ###
         updater.dailyUpdate()
         ### end of tasks to execute ###
         timeEnd = time()
-        timeElapsed = timedelta(seconds=timeEnd - timeStart)
+        timeElapsed = timedelta(seconds=timeEnd-timeStart)
         myLogger.info(f"Program Done. Elapsed time {timeElapsed}")
     except Exception:
         myLogger.critical("Major Exception Occurred", exc_info=True)
-
-if __name__ == '__main__':
-    doMain()
 
