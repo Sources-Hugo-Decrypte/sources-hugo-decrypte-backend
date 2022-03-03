@@ -281,9 +281,9 @@ class DatabaseUpdater(object):
 
     ##### global procedures #####
 
-    def dailyUpdate(self):
+    def dailyUpdate(self, limit=MAX_VIDEOS_TO_FETCH):
         self.logger.info("Start daily update procedure")
-        listVideoId = self.step01_generic_checkNewVideos(limit=MAX_VIDEOS_TO_FETCH)
+        listVideoId = self.step01_generic_checkNewVideos(limit=limit)
         if len(listVideoId)!=0:
             self.step11_videoTable_createRowsFromListVideoId(listVideoId=listVideoId)
             self.step12_videoTable_addVideoDetails(listVideoId=listVideoId)

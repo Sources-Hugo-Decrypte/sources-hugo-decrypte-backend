@@ -67,14 +67,12 @@ if __name__ == '__main__':
     fe_handler.setFormatter(fe_format)
     myLogger.addHandler(fe_handler)
 
-    MAX_VIDEOS_TO_FETCH = None # -> fetch every video published, without number limit
-
     updater = DatabaseUpdater(logger=myLogger, database=DB_NAME, user=DB_USER, password=DB_PWD, host=DB_HOST)
     try:
         atexit.register(emailProcedure) # Schedule sending email at end of execution
         timeStart = time()
         ### put below this line the tasks to execute ###
-        updater.dailyUpdate()
+        updater.dailyUpdate(limit=None)
         ### end of tasks to execute ###
         timeEnd = time()
         timeElapsed = timedelta(seconds=timeEnd-timeStart)
