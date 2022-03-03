@@ -14,6 +14,7 @@ LOG_PATH = str(ROOT_PATH) + os.sep + "log"
 LOG_HEADER = "="*50+"\n\tExecution Log File\n\tCreation Date : %s\n"+"="*50+"\n\n"
 LOG_HEADER_DATE_FORMAT = "%Y %m %d - %H:%M:%S"
 LOG_FILE_DATE_FORMAT = "%Y%m%d_%H%M%S"
+MAX_VIDEOS_TO_FETCH = 5
 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
