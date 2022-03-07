@@ -213,11 +213,13 @@ LIST_BLACKLISTED_URL = (("radio-londres.fr", "This is and old domain name, owned
                         ("http://timejump.me", "Texting app. Not a source"),
                         ("https://shows.acast.com/mashup-linterview", "HugoDecrypte podcasts"),
                         ("https://shows.acast.com/mashup-les-actus", "HugoDecrypte podcasts"),
-                        ("https://www.tiktok.com/@hugodecrypte", "HugoDecrypte TikTok page")
+                        ("https://www.tiktok.com/@hugodecrypte", "HugoDecrypte TikTok page"),
+                        ("http://snapchat.com/add/clementlanot", "Not a source")
                         )
 
 # Structure is as follows : ((channel_name, reason_of_blacklisting), (channel_name, reason_of_blacklisting), ...)
 LIST_BLACKLISTED_YTB_CHANNEL = (("HugoDécrypte - Actus du jour", "Hugo Decrypte channel"),
                                 ("HugoDécrypte", "Hugo Decrypte channel"),
                                 ("Hugo Travers", "Channel owned by Hugo Travers"),
-                                ("Craft", "Channel owned bu Hugo Travers and Cyrus North"))
+                                ("Craft", "Channel owned by Hugo Travers and Cyrus North"),
+                                ("Mashup par HugoDécrypte", "Hugo Decrypte channel"))
