@@ -62,7 +62,7 @@ La base de données (PostgreSQL) contient 6 tables structurées de la manière s
 
 - **blacklist_ytb_channel_table**
 
-  Cette table renseigne toutes les chaînes YouTube blacklitées.
+  Cette table renseigne toutes les chaînes YouTube filtrées.
 
   | Colonne                 | Type                                        | Description |
   | -----------             | -----------                                 | ----------- |
@@ -116,7 +116,7 @@ flowchart TB
     
     NewDomainName --> RegisterUpdate
     RegisterUpdate[(Mise à jour du registre <br/> des noms de domaine)]
-    RegisterUpdate --> BlacklistAnalysis[[Analyse de tous les urls. Définition de <br/> ceux nécessitant d'être blacklistés]]
+    RegisterUpdate --> BlacklistAnalysis[[Analyse de tous les urls. Définition de <br/> ceux nécessitant d'être filtrés]]
     BlacklistAnalysis --> BlacklistUpdate[(Mise à jour de la blacklist)]
     ManualData(Données entrées manuellement) --> BlacklistUpdate
     BlacklistUpdate --> SendEmail[[Envoyer mail avec log en pièce-jointe]]
@@ -147,6 +147,6 @@ flowchart TB
 
 La structure actuelle de la base de données et de l'algorithme a toutefois quelques défauts :
 - Les urls raccourcis (avec des shortener comme bit.ly ou p.dm) sont considérés tels quels.
-- Certains urls demandent un travail approfondi. C'est le cas des urls YouTube ou Twitter par exemple, un lien vers une vidéo ou un tweet sur lequel s'appuie la présentation d'Hugo Décrypte doit être considéré comme une source, mais dans le cas contraire il doit être blacklisté. Ce tri a été effectué pour de nombreux liens mais il reste du travail.
+- Certains urls demandent un travail approfondi. C'est le cas des urls YouTube ou Twitter par exemple, un lien vers une vidéo ou un tweet sur lequel s'appuie la présentation d'Hugo Décrypte doit être considéré comme une source, mais dans le cas contraire il doit être filtré. Ce tri a été effectué pour de nombreux liens mais il reste du travail.
 
 Nous travaillons actuellement sur la correction de ces défauts. Aussi, n'hésitez pas à nous remonter toute proposition en lien avec ces sujets ou sur le projet en général ! 😉
