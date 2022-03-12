@@ -119,7 +119,7 @@ flowchart TB
     RegisterUpdate --> BlacklistAnalysis[[Analyse de tous les urls. Définition de <br/> ceux nécessitant d'être filtrés]]
     BlacklistAnalysis --> BlacklistUpdate[(Mise à jour de la blacklist)]
     ManualData(Données entrées manuellement) --> BlacklistUpdate
-    BlacklistUpdate --> SendEmail[[Envoyer mail avec log en pièce-jointe]]
+    BlacklistUpdate --> SendEmail[[Envoyer un mail avec le log en pièce-jointe]]
     SendEmail --> Done((Fin))
 
     subgraph "Enregistrement des données brutes"
