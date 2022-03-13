@@ -15,6 +15,10 @@ LOG_HEADER = "="*50+"\n\tExecution Log File\n\tCreation Date : %s\n"+"="*50+"\n\
 LOG_HEADER_DATE_FORMAT = "%Y %m %d - %H:%M:%S"
 LOG_FILE_DATE_FORMAT = "%Y%m%d_%H%M%S"
 try:
+    EMAIL_SUBJECT = os.environ["HDS_EMAIL_SUBJECT"]
+except:
+    EMAIL_SUBJECT = "Update Procedure"  # Default email subject
+try:
     if os.getenv("HDS_MAX_VIDEOS_TO_FETCH").capitalize()=="None":
         MAX_VIDEOS_TO_FETCH = None
     else:

@@ -19,7 +19,7 @@ def logDataWithoutHeader(logFile):
 def emailProcedure():
     dataErrorLog = logDataWithoutHeader(fileLogError)
     if dataErrorLog is None:
-        emailSubject = "Daily Routine | OK"
+        emailSubject = f"{EMAIL_SUBJECT} | OK"
         emailMessage = f"Program done. Find log in the attachment."
         emailFiles = [fileLog]
     else:
@@ -27,7 +27,7 @@ def emailProcedure():
         majorLevel = levelLogError
         for level in listLevels[listLevels.index(majorLevel):]:
             if logging.getLevelName(level) in dataErrorLog and level>majorLevel: majorLevel=level
-        emailSubject = f"Daily Routine | {logging.getLevelName(majorLevel)}"
+        emailSubject = f"{EMAIL_SUBJECT} | {logging.getLevelName(majorLevel)}"
         emailMessage = f"Program done. Errors occurred. Find logs in the attachment."
         emailFiles = [fileLog, fileLogError]
     send_mail(send_from="GitHub",
