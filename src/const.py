@@ -35,7 +35,7 @@ YTB_HUGO_CHANNEL_URL = "https://www.youtube.com/c/HugoD%C3%A9crypte"
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # Data base file :
-if os.getenv("HDS_USE_DB_LOCALHOST").capitalize()=="True":
+if os.getenv("HDS_USE_DB_LOCALHOST", "False").capitalize()=="True":
     choseLocalDatabase = str(input("Will use local database. Continue? y/n: ")).lower()
     assert choseLocalDatabase in ['yes', 'ye', 'y'], "Abort. Will not use local database"
     # --- used for local DB : -----
