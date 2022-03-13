@@ -17,7 +17,6 @@ jobs:
           python-version: 3.6 # Install the python version needed
 
       - name: Install Python dependencies
-        # previous pafy patch install : python -m pip install -e git+git://github.com/mohamed-challal/pafy.git@develop#egg=pafy
         run: |
           python -m pip install --upgrade pip requests
           python -m pip install psycopg2
