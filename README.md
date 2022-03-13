@@ -7,8 +7,8 @@ La partie backend interagit directement avec la base de données et n'est jamais
 ```mermaid
 flowchart TB
     DB[(Base de données<br/>PostgreSQL)]
-    Backend[(Algorithme<br/>backend)]
-    Frontend[(Hébergement<br/>web)]
+    Backend[(Backend<br/>-<br/>Algorithme<br/>d'analyse)]
+    Frontend[(Frontend<br/>-<br/>Hébergement<br/>web)]
     WebUser(Utilisateur web) <--> Frontend
     Backend <--> DB
     Frontend <--> DB
