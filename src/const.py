@@ -14,10 +14,15 @@ LOG_PATH = str(ROOT_PATH) + os.sep + "log"
 LOG_HEADER = "="*50+"\n\tExecution Log File\n\tCreation Date : %s\n"+"="*50+"\n\n"
 LOG_HEADER_DATE_FORMAT = "%Y %m %d - %H:%M:%S"
 LOG_FILE_DATE_FORMAT = "%Y%m%d_%H%M%S"
-try:
-    EMAIL_SUBJECT = os.environ["HDS_EMAIL_SUBJECT"]
-except:
-    EMAIL_SUBJECT = "Update Procedure"  # Default email subject
+
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+##                               VARIABLES SET BY WORKFLOW                                     #
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+## Email subject :
+try: EMAIL_SUBJECT = os.environ["HDS_EMAIL_SUBJECT"]
+except: EMAIL_SUBJECT = "Update Procedure"  # Default email subject
+## Num of videos to fetch :
 try:
     if os.getenv("HDS_MAX_VIDEOS_TO_FETCH").capitalize()=="None":
         MAX_VIDEOS_TO_FETCH = None
@@ -25,6 +30,20 @@ try:
         MAX_VIDEOS_TO_FETCH = int(os.getenv("HDS_MAX_VIDEOS_TO_FETCH"))
 except:
     MAX_VIDEOS_TO_FETCH = 5
+## FLAG - do youtube update :
+try:
+    if os.environ["HDS_DO_YOUTUBE_UPDATE"] == "True": DO_YOUTUBE_UPDATE = True
+    elif os.environ["HDS_DO_YOUTUBE_UPDATE"] == "False": DO_YOUTUBE_UPDATE = False
+    else: DO_YOUTUBE_UPDATE = True  # Default value
+except:
+    DO_YOUTUBE_UPDATE = True    # Default value
+## FLAG - do manual blacklist update :
+try:
+    if os.environ["HDS_DO_MANUAL_BLACKLIST_UPDATE"] == "True": DO_MANUAL_BLACKLIST_UPDATE = True
+    elif os.environ["HDS_DO_MANUAL_BLACKLIST_UPDATE"] == "False": DO_MANUAL_BLACKLIST_UPDATE = False
+    else: DO_MANUAL_BLACKLIST_UPDATE = False    # Default value
+except:
+    DO_MANUAL_BLACKLIST_UPDATE = False  # Default value
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 ##                                         WEB VARIABLES                                       #

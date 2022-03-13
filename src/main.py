@@ -67,12 +67,16 @@ if __name__ == '__main__':
     fe_handler.setFormatter(fe_format)
     myLogger.addHandler(fe_handler)
 
-    updater = DatabaseUpdater(logger=myLogger, database=DB_NAME, user=DB_USER, password=DB_PWD, host=DB_HOST)
     try:
         atexit.register(emailProcedure) # Schedule sending email at end of execution
         timeStart = time()
         ### put below this line the tasks to execute ###
-        updater.dailyUpdate()
+        if DO_YOUTUBE_UPDATE:
+            updater = DatabaseUpdater(logger=myLogger, database=DB_NAME, user=DB_USER, password=DB_PWD, host=DB_HOST)
+            updater.dailyUpdate()
+        if DO_MANUAL_BLACKLIST_UPDATE:
+            updaterMan = DatabaseManualSettings(logger=logging, database=DB_NAME, user=DB_USER, password=DB_PWD, host=DB_HOST)
+            updaterMan.update()
         ### end of tasks to execute ###
         timeEnd = time()
         timeElapsed = timedelta(seconds=timeEnd-timeStart)
