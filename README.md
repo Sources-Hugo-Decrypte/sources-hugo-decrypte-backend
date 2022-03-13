@@ -1,6 +1,6 @@
-# Hugo Décrypte Sources - backend
+# Sources Hugo Décrypte - backend
 
-Ce répertoire contient le code source de la partie backend du projet "Sources Hugo Décrypte".<br/>L'algorithme constituant cette partie backend à pour rôle d'analyser les données accessibles sur YouTube et de les stocker dans une base en serveur. Les données sont ensuite présentées côté frontend, sur le site web [sourceshugodecrypte.fr](https://sourceshugodecrypte.fr).
+Ce répertoire contient le code source de la partie backend du projet "Sources Hugo Décrypte".<br/>Cette partie backend à pour rôle d'analyser les données accessibles sur YouTube et de les stocker dans une base de données en serveur. Les données sont ensuite présentées côté frontend, sur le site web [sourceshugodecrypte.fr](https://sourceshugodecrypte.fr).
 
 La partie backend interagit directement avec la base de données et n'est jamais accessible par l'utilisateur, comme présenté sur le schéma suivant :
 
@@ -14,6 +14,8 @@ flowchart TB
     Frontend <--> DB
     style Backend stroke-width:4px
 ```
+
+Pour en savoir plus sur la partie frontend du projet : [Sources Hugo Décrypte - frontend](https://github.com/Sources-Hugo-Decrypte/sources-hugo-decrypte-web#readme)
 
 ## Base de données
 
