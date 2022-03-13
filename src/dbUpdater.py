@@ -130,37 +130,6 @@ class DatabaseUpdater(object):
             except Exception as e:
                 self.logger.error(f"Error occurred with video id '{videoId}'\n{e}")
 
-    def step22_urlTable_addCheck(self, listVideoId, overwrite=False, doAll=False, logEn=True):
-        if not doAll: assert isinstance(listVideoId, list), f"'listVideoId should be a list. Given {listVideoId}"
-        else: listVideoId = self.getListKnownVideoId()
-        for videoId in listVideoId:
-            try:
-                listUrl = self.db.doQuery(f"SELECT {URL_TABLE.COL_URL_FULL} FROM {URL_TABLE.NAME} "
-                                          f"WHERE {URL_TABLE.COL_VIDEO_ID}='{videoId}'")
-                assert len(listUrl)!=0, f"No url known for video id '{videoId}'"
-                listUrl = [listUrl[i][0] for i in range(len(listUrl))]
-                for url in listUrl:
-                    try:
-                        if overwrite or self.db.isDataMissing(tableName=URL_TABLE.NAME,
-                                                              dicKeysValues={URL_TABLE.COL_VIDEO_ID: videoId,
-                                                                             URL_TABLE.COL_URL_FULL: url},
-                                                              listColumnsToCheck=[URL_TABLE.COL_CHECK_STATUS,
-                                                                                  URL_TABLE.COL_CHECK_MSG]):
-                            checkStatus, checkMsg = checkUrl(url)
-                            self.db.updateData(tableName=URL_TABLE.NAME,
-                                               dicKeysValues={URL_TABLE.COL_VIDEO_ID: videoId,
-                                                              URL_TABLE.COL_URL_FULL: url},
-                                               dicData={URL_TABLE.COL_CHECK_STATUS: checkStatus,
-                                                        URL_TABLE.COL_CHECK_MSG: checkMsg})
-                            if logEn:
-                                self.logger.info(f"Url checked. Video id '{videoId}'. Url : '{url}'")
-                                if checkStatus.upper()!="OK":
-                                    self.logger.warning(f"Check status not OK. Check message : {checkMsg}. Video id '{videoId}'. Url : '{url}'")
-                    except Exception as e:
-                        self.logger.error(f"Error occurred with video id '{videoId}' and url '{url}'\n{e}")
-            except Exception as e:
-                self.logger.error(f"Error occurred with video id '{videoId}'\n{e}")
-
     def step31_registerTable_updateTable(self, logEn=True):
         listShortUrl = self.db.doQuery(f"SELECT DISTINCT {URL_TABLE.COL_URL_SHORT} FROM {URL_TABLE.NAME}")
         if len(listShortUrl)>0: listShortUrl = [listShortUrl[i][0] for i in range(len(listShortUrl))]
@@ -288,7 +257,6 @@ class DatabaseUpdater(object):
             self.step11_videoTable_createRowsFromListVideoId(listVideoId=listVideoId)
             self.step12_videoTable_addVideoDetails(listVideoId=listVideoId)
             self.step21_urlTable_createRowsFromListVideoId(listVideoId=listVideoId)
-            # self.step22_urlTable_addCheck(listVideoId=listVideoId)
         self.step31_registerTable_updateTable()
         self.step41_links_updateLinksYtbTable()
         self.step81_blacklistTable_updateTable()

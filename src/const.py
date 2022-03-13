@@ -16,7 +16,6 @@ LOG_HEADER_DATE_FORMAT = "%Y %m %d - %H:%M:%S"
 LOG_FILE_DATE_FORMAT = "%Y%m%d_%H%M%S"
 MAX_VIDEOS_TO_FETCH = 5
 
-
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 ##                                         WEB VARIABLES                                       #
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -30,7 +29,7 @@ YTB_HUGO_CHANNEL_URL = "https://www.youtube.com/c/HugoD%C3%A9crypte"
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # Data base file :
-if os.getenv("HDS_USE_DB_LOCALHOST", 'False').capitalize()=="True":
+if os.getenv("HDS_USE_DB_LOCALHOST").capitalize()=="True":
     choseLocalDatabase = str(input("Will use local database. Continue? y/n: ")).lower()
     assert choseLocalDatabase in ['yes', 'ye', 'y'], "Abort. Will not use local database"
     # --- used for local DB : -----
@@ -82,8 +81,6 @@ class VIDEO_TABLE:
 ##  - url_full          : [String] full url
 ##  - url_short         : [String] first part of the full_url
 ##  - url_video_id      : [String] youtube video ID where this url was used
-##  - url_check_status  : [String] status returned by the url checking analysis
-##  - url_check_msg     : [String] detailed message returned by the url checking analysis
 ##
 class URL_TABLE:
     NAME = "url_table"
@@ -91,14 +88,10 @@ class URL_TABLE:
     COL_VIDEO_ID = "url_video_id"
     COL_URL_FULL = "url_full"
     COL_URL_SHORT = "url_short"
-    COL_CHECK_STATUS = "url_check_status"
-    COL_CHECK_MSG = "url_check_msg"
     # Variables :
     dicStructure = {COL_VIDEO_ID: "text",
                     COL_URL_FULL : "text",
-                    COL_URL_SHORT: "text",
-                    COL_CHECK_STATUS: "text",
-                    COL_CHECK_MSG: "text"}
+                    COL_URL_SHORT: "text"}
     listKeys = [COL_VIDEO_ID, COL_URL_FULL]
     listColumns = list(dicStructure.keys())
 
