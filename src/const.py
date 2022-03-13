@@ -32,15 +32,15 @@ except:
     MAX_VIDEOS_TO_FETCH = 5
 ## FLAG - do youtube update :
 try:
-    if os.environ["HDS_DO_YOUTUBE_UPDATE"] == "True": DO_YOUTUBE_UPDATE = True
-    elif os.environ["HDS_DO_YOUTUBE_UPDATE"] == "False": DO_YOUTUBE_UPDATE = False
+    if os.getenv("HDS_DO_YOUTUBE_UPDATE") == "True": DO_YOUTUBE_UPDATE = True
+    elif os.getenv("HDS_DO_YOUTUBE_UPDATE") == "False": DO_YOUTUBE_UPDATE = False
     else: DO_YOUTUBE_UPDATE = True  # Default value
 except:
     DO_YOUTUBE_UPDATE = True    # Default value
 ## FLAG - do manual blacklist update :
 try:
-    if os.environ["HDS_DO_MANUAL_BLACKLIST_UPDATE"] == "True": DO_MANUAL_BLACKLIST_UPDATE = True
-    elif os.environ["HDS_DO_MANUAL_BLACKLIST_UPDATE"] == "False": DO_MANUAL_BLACKLIST_UPDATE = False
+    if os.getenv("HDS_DO_MANUAL_BLACKLIST_UPDATE") == "True": DO_MANUAL_BLACKLIST_UPDATE = True
+    elif os.getenv("HDS_DO_MANUAL_BLACKLIST_UPDATE") == "False": DO_MANUAL_BLACKLIST_UPDATE = False
     else: DO_MANUAL_BLACKLIST_UPDATE = False    # Default value
 except:
     DO_MANUAL_BLACKLIST_UPDATE = False  # Default value
