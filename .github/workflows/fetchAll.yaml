@@ -35,6 +35,7 @@ jobs:
             HDS_GMAIL_ADDRESS: ${{ secrets.HDS_GMAIL_ADDRESS }}
             HDS_GMAIL_APP_PASSWORD: ${{ secrets.HDS_GMAIL_APP_PASSWORD }}
             HDS_MAX_VIDEOS_TO_FETCH: None
+            HDS_EMAIL_SUBJECT: Fetch All
         run: python src/main.py
 
       - name : Send email if workflow failed
