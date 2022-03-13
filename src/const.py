@@ -14,7 +14,13 @@ LOG_PATH = str(ROOT_PATH) + os.sep + "log"
 LOG_HEADER = "="*50+"\n\tExecution Log File\n\tCreation Date : %s\n"+"="*50+"\n\n"
 LOG_HEADER_DATE_FORMAT = "%Y %m %d - %H:%M:%S"
 LOG_FILE_DATE_FORMAT = "%Y%m%d_%H%M%S"
-MAX_VIDEOS_TO_FETCH = 5
+try:
+    if os.getenv("HDS_MAX_VIDEOS_TO_FETCH").capitalize()=="None":
+        MAX_VIDEOS_TO_FETCH = None
+    else:
+        MAX_VIDEOS_TO_FETCH = int(os.getenv("HDS_MAX_VIDEOS_TO_FETCH"))
+except:
+    MAX_VIDEOS_TO_FETCH = 5
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 ##                                         WEB VARIABLES                                       #
