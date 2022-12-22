@@ -236,7 +236,8 @@ LIST_BLACKLISTED_URL = (("radio-londres.fr", "This is and old domain name, owned
                         ("https://shows.acast.com/mashup-linterview", "HugoDecrypte podcasts"),
                         ("https://shows.acast.com/mashup-les-actus", "HugoDecrypte podcasts"),
                         ("https://www.tiktok.com/@hugodecrypte", "HugoDecrypte TikTok page"),
-                        ("http://snapchat.com/add/clementlanot", "Not a source")
+                        ("http://snapchat.com/add/clementlanot", "Not a source"),
+                        ("hugodecry.pt", "HugoDecrypt's domain name")
                         )
 
 # Structure is as follows : ((channel_name, reason_of_blacklisting), (channel_name, reason_of_blacklisting), ...)
