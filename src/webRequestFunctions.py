@@ -1,7 +1,7 @@
-
-# functions to tests urls
+# functions to test urls
 
 import urllib.request, urllib.error
+
 
 httpStatus = {  # details on : https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
   "1": "Informational",

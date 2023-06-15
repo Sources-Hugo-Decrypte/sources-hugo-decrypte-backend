@@ -1,6 +1,8 @@
+# generic text parsing functions
 
 from tldextract import extract
 from urlextract import URLExtract
+
 
 def getAllUrlsFromDescription(textDesc, removeDuplicates=True):
     assert isinstance(textDesc, str), f"Given desc should be a string. Given : {textDesc}"

@@ -1,9 +1,9 @@
+# const values
 
 import os
 from pathlib import Path
 import urllib.parse as up
 
-# Const variables
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 ##                                           COMMON                                            #

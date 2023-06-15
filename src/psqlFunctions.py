@@ -1,4 +1,3 @@
-
 # PostgreSQL mapped functions for easier use
 
 import psycopg2

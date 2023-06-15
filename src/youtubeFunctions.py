@@ -1,8 +1,9 @@
-
+# youtube generic functions
 
 import pafy
 import scrapetube
 from const import *
+
 
 def youtubeGetUrlFromVideoId(videoId):
     return "https://www.youtube.com/watch?v=%s" % videoId

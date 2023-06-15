@@ -1,9 +1,12 @@
+# main code
+
 import atexit
 import logging
 from time import time
 from datetime import datetime, timedelta
 from dbUpdater import *
 from emailFunctions import *
+
 
 def logDataWithoutHeader(logFile):
     """

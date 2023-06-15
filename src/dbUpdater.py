@@ -1,9 +1,9 @@
+# data base updater class
 
 import logging
 from psqlFunctions import *
 from youtubeFunctions import *
 from const import *
-from webRequestFunctions import checkUrl
 from urlTextTreatment import *
 
 

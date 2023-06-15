@@ -1,4 +1,5 @@
-import os
+# mailing functions
+
 import smtplib
 from pathlib import Path
 from email.mime.multipart import MIMEMultipart
