@@ -4,6 +4,8 @@
 
 :x: **CE PROJET N'EST PLUS ACTIF PAR MANQUE DE TEMPS ET DE VISIBILITE. LE CODE SOURCE RESTE TOUTEFOIS DISPONIBLE.** :x:
 
+**UNE ARCHIVE DU SITE WEB EST DISPONIBLE A L'ADRESSE SUIVANTE :** [sourceshugodecrypte.netlify.app](https://sourceshugodecrypte.netlify.app)
+
 ---
 
 Ce répertoire contient le code source de la partie backend du projet "Sources Hugo Décrypte".<br/>Cette partie backend à pour rôle d'analyser les données accessibles sur YouTube et de les stocker dans une base de données en serveur. Les données sont ensuite présentées côté frontend, sur le site web [sourceshugodecrypte.fr](https://sourceshugodecrypte.fr).
